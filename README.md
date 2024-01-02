@@ -1,16 +1,17 @@
-# widget_test
+실제 위젯 개발 전 테스트
+# 로그인 위젯
 
-A new Flutter project.
+사용 예제
 
-## Getting Started
+로그인 버튼 클릭 이벤트시 onSubmit
 
-This project is a starting point for a Flutter application.
+``` dart
+LoginWidget(
+          onSubmit: (id, pw) {
+            ...
+          },
+        )
+```
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![LoginWidget](https://github.com/zeesooho/widget_test/assets/25339188/930e847f-3f8f-4eb5-b9ff-9925534bd052)
