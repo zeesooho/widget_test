@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:widget_test/login/login_widget.dart';
+import 'package:widget_test/profile/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +21,8 @@ class MyApp extends StatelessWidget {
           title: const Text("DongAJul Widget Test"),
         ),
         body: LoginWidget(
-          onSubmit: (id, pw) {
-            print("id: $id, pw: $pw");
-          },
+          signIn: (id, pw) => print("id: $id, pw: "),
+          signUp: () => print("signUP"),
         ),
       ),
     );

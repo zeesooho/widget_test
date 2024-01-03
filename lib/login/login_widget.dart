@@ -1,10 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class LoginWidget extends StatefulWidget {
-  final Function(String, String) onSubmit;
+  final Function(String, String) signIn;
+  final Function() signUp;
 
-  const LoginWidget({super.key, required this.onSubmit});
+  const LoginWidget({
+    super.key,
+    required this.signIn,
+    required this.signUp,
+  });
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -33,12 +37,75 @@ class _LoginWidgetState extends State<LoginWidget> {
             isPw: true,
             controller: pwController,
           ),
-          TextButton(
-            onPressed: () => widget.onSubmit(idController.text, pwController.text),
-            style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.only(left: 28, right: 28, top: 14, bottom: 14))),
-            child: const Text("로그인"),
-          ),
+          SignInButton(signIn: widget.signIn, idController: idController, pwController: pwController),
+          SignUpButton(signUp: widget.signUp),
         ],
+      ),
+    );
+  }
+}
+
+class SignInButton extends StatelessWidget {
+  const SignInButton({
+    super.key,
+    required this.signIn,
+    required this.idController,
+    required this.pwController,
+  });
+
+  final Function(String, String) signIn;
+  final TextEditingController idController;
+  final TextEditingController pwController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => signIn(idController.text, pwController.text),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(18),
+            backgroundColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
+          ),
+          child: const Text(
+            "로그인",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SignUpButton extends StatelessWidget {
+  const SignUpButton({
+    super.key,
+    required this.signUp,
+  });
+
+  final Function() signUp;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton(
+          onPressed: signUp,
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.all(18),
+            side: const BorderSide(
+              color: Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
+            ),
+          ),
+          child: const Text(
+            "회원가입",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
       ),
     );
   }
@@ -87,18 +154,20 @@ class _CommonTextFieldState extends State<CommonTextField> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
-              widget.controller.text.isNotEmpty && widget.isPw
-                  ? IconButton(
-                      onPressed: () => setState(() => _isHide = !_isHide),
-                      icon: const Icon(Icons.visibility),
-                    )
-                  : Container(),
-              widget.controller.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () => setState(() => widget.controller.clear()),
-                    )
-                  : Container(),
+              Visibility(
+                visible: widget.controller.text.isNotEmpty && widget.isPw,
+                child: IconButton(
+                  onPressed: () => setState(() => _isHide = !_isHide),
+                  icon: const Icon(Icons.visibility),
+                ),
+              ),
+              Visibility(
+                visible: widget.controller.text.isNotEmpty,
+                child: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () => setState(() => widget.controller.clear()),
+                ),
+              ),
             ],
           ),
         ),
