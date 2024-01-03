@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class LoginWidget extends StatefulWidget {
   final bool Function(String, String) signIn;
   final Function() signUp;
+  final Function() onForgotPw;
 
   const LoginWidget({
     super.key,
     required this.signIn,
     required this.signUp,
+    required this.onForgotPw,
   });
 
   @override
@@ -39,7 +41,10 @@ class _LoginWidgetState extends State<LoginWidget> {
             isPw: true,
             controller: pwController,
           ),
-          ForgotPassword(visibility: tried),
+          ForgotPassword(
+            visibility: tried,
+            onPressed: widget.onForgotPw,
+          ),
           SignInButton(onPressed: signIn),
           SignUpButton(onPressed: widget.signUp),
         ],
@@ -53,9 +58,11 @@ class _LoginWidgetState extends State<LoginWidget> {
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({
     super.key,
+    required this.onPressed,
     required this.visibility,
   });
 
+  final Function() onPressed;
   final bool visibility;
 
   @override
@@ -65,7 +72,7 @@ class ForgotPassword extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: TextButton(
-          onPressed: () => {},
+          onPressed: onPressed,
           child: const Text(
             "비밀번호를 잊었나요?",
             style: TextStyle(color: Colors.blue),
