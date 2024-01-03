@@ -21,8 +21,11 @@ class MyApp extends StatelessWidget {
           title: const Text("DongAJul Widget Test"),
         ),
         body: LoginWidget(
-          signIn: (id, pw) => print("id: $id, pw: "),
-          signUp: () => print("signUP"),
+          signIn: (id, pw) {
+            print("id: $id, pw: $pw");
+            return id != pw;
+          },
+          signUp: () => print("sign up"),
         ),
       ),
     );

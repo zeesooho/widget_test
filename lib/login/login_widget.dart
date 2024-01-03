@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoginWidget extends StatefulWidget {
-  final Function(String, String) signIn;
+  final bool Function(String, String) signIn;
   final Function() signUp;
 
   const LoginWidget({
@@ -18,12 +18,14 @@ class _LoginWidgetState extends State<LoginWidget> {
   TextEditingController idController = TextEditingController();
   TextEditingController pwController = TextEditingController();
 
+  bool tried = false;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CommonTextField(
             hintText: "dongajul@dongajul.com",
@@ -37,9 +39,38 @@ class _LoginWidgetState extends State<LoginWidget> {
             isPw: true,
             controller: pwController,
           ),
-          SignInButton(signIn: widget.signIn, idController: idController, pwController: pwController),
-          SignUpButton(signUp: widget.signUp),
+          ForgotPassword(visibility: tried),
+          SignInButton(onPressed: signIn),
+          SignUpButton(onPressed: widget.signUp),
         ],
+      ),
+    );
+  }
+
+  void signIn() => setState(() => tried = widget.signIn(idController.text, pwController.text));
+}
+
+class ForgotPassword extends StatelessWidget {
+  const ForgotPassword({
+    super.key,
+    required this.visibility,
+  });
+
+  final bool visibility;
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: visibility,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: TextButton(
+          onPressed: () => {},
+          child: const Text(
+            "비밀번호를 잊었나요?",
+            style: TextStyle(color: Colors.blue),
+          ),
+        ),
       ),
     );
   }
@@ -48,14 +79,10 @@ class _LoginWidgetState extends State<LoginWidget> {
 class SignInButton extends StatelessWidget {
   const SignInButton({
     super.key,
-    required this.signIn,
-    required this.idController,
-    required this.pwController,
+    required this.onPressed,
   });
 
-  final Function(String, String) signIn;
-  final TextEditingController idController;
-  final TextEditingController pwController;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +91,7 @@ class SignInButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () => signIn(idController.text, pwController.text),
+          onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(18),
             backgroundColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
@@ -82,10 +109,10 @@ class SignInButton extends StatelessWidget {
 class SignUpButton extends StatelessWidget {
   const SignUpButton({
     super.key,
-    required this.signUp,
+    required this.onPressed,
   });
 
-  final Function() signUp;
+  final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +121,7 @@ class SignUpButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: OutlinedButton(
-          onPressed: signUp,
+          onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.all(18),
             side: const BorderSide(
