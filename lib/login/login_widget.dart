@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:widget_test/common/input_validation.dart';
+
+import 'common_text_field.dart';
 
 class LoginWidget extends StatefulWidget {
   final bool Function(String, String) signIn;
-  final Function() signUp;
+  final Function(String, String) signUp;
   final Function() onForgotPw;
 
   const LoginWidget({
@@ -17,10 +20,18 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
-  TextEditingController idController = TextEditingController();
-  TextEditingController pwController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _pwController = TextEditingController();
+
+  String? _idHelperText;
+  String? _pwHelperText;
+
+  HelperStyle? _idHelperStyle;
+  HelperStyle? _pwHelperStyle;
 
   bool tried = false;
+  bool idValid = false;
+  bool pwValid = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,27 +43,56 @@ class _LoginWidgetState extends State<LoginWidget> {
           CommonTextField(
             hintText: "dongajul@dongajul.com",
             labelText: "아이디",
-            helperText: "이메일 형식으로 해주세요",
-            controller: idController,
+            helperText: _idHelperText,
+            helperStyle: _idHelperStyle,
+            onChange: (id) => setState(() => idValidate(id)),
+            onClear: () => setState(() => idValidate(_idController.text)),
+            controller: _idController,
           ),
           CommonTextField(
             labelText: "비밀번호",
-            helperText: "숫자, 문자를 포함하여 8자 이상 입력해주세요.",
+            helperText: _pwHelperText,
+            helperStyle: _pwHelperStyle,
             isPw: true,
-            controller: pwController,
+            onChange: (pw) => setState(() => pwValidate(pw)),
+            onClear: () => setState(() => pwValidate(_pwController.text)),
+            controller: _pwController,
           ),
           ForgotPassword(
             visibility: tried,
             onPressed: widget.onForgotPw,
           ),
-          SignInButton(onPressed: signIn),
-          SignUpButton(onPressed: widget.signUp),
+          SignInButton(onPressed: idValid && pwValid ? signIn : null),
+          SignUpButton(onPressed: signUp),
         ],
       ),
     );
   }
 
-  void signIn() => setState(() => tried = widget.signIn(idController.text, pwController.text));
+  void pwValidate(String pw) {
+    if (pw.isValidPwFormat()) {
+      _pwHelperText = null;
+      pwValid = true;
+    } else {
+      _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
+      _pwHelperStyle = HelperStyle(state: HelperState.error);
+      pwValid = false;
+    }
+  }
+
+  void idValidate(String id) {
+    if (id.isValidEmailFormat()) {
+      _idHelperText = null;
+      idValid = true;
+    } else {
+      _idHelperText = "이메일 형식으로 입력해주세요";
+      _idHelperStyle = HelperStyle(state: HelperState.error);
+      idValid = false;
+    }
+  }
+
+  void signIn() => setState(() => tried = widget.signIn(_idController.text, _pwController.text));
+  void signUp() => setState(() => widget.signUp(_idController.text, _pwController.text));
 }
 
 class ForgotPassword extends StatelessWidget {
@@ -89,7 +129,7 @@ class SignInButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +159,7 @@ class SignUpButton extends StatelessWidget {
     required this.onPressed,
   });
 
-  final Function() onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -143,83 +183,4 @@ class SignUpButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class CommonTextField extends StatefulWidget {
-  final Icon? icon;
-  final String? labelText;
-  final String? hintText;
-  final String? helperText;
-  final bool isPw;
-  final TextEditingController controller;
-
-  const CommonTextField({
-    Key? key,
-    this.icon,
-    this.labelText,
-    this.hintText,
-    this.helperText,
-    this.isPw = false,
-    required this.controller,
-  }) : super(key: key);
-
-  @override
-  State<CommonTextField> createState() => _CommonTextFieldState();
-}
-
-class _CommonTextFieldState extends State<CommonTextField> {
-  bool _isHide = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          icon: widget.icon,
-          hintText: widget.hintText,
-          labelText: widget.labelText,
-          helperText: widget.helperText,
-          enabledBorder: getInputBorder(const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56)),
-          focusedBorder: getInputBorder(const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56), bold: true),
-          errorBorder: getInputBorder(Colors.red),
-          fillColor: Colors.grey.shade300,
-          suffixIcon: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Visibility(
-                visible: widget.controller.text.isNotEmpty && widget.isPw,
-                child: IconButton(
-                  onPressed: () => setState(() => _isHide = !_isHide),
-                  icon: const Icon(Icons.visibility),
-                ),
-              ),
-              Visibility(
-                visible: widget.controller.text.isNotEmpty,
-                child: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () => setState(() => widget.controller.clear()),
-                ),
-              ),
-            ],
-          ),
-        ),
-        controller: widget.controller,
-        onChanged: (_) => setState(() => {}),
-        obscureText: widget.isPw && _isHide,
-        obscuringCharacter: "*",
-        textInputAction: widget.isPw ? TextInputAction.done : TextInputAction.next,
-        onSubmitted: widget.isPw ? (_) => FocusScope.of(context).unfocus() : (_) => FocusScope.of(context).nextFocus(),
-        keyboardType: widget.isPw ? TextInputType.text : TextInputType.emailAddress,
-      ),
-    );
-  }
-
-  OutlineInputBorder getInputBorder(Color color, {bool bold = false}) => OutlineInputBorder(
-        borderSide: BorderSide(
-          color: color,
-          width: bold ? 2 : 1,
-        ),
-      );
 }

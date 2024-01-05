@@ -17,11 +17,15 @@ class LoginScreen extends StatelessWidget {
       body: Center(
         child: LoginWidget(
           signIn: (id, pw) {
-            print("id: $id, pw: $pw");
             return id != pw;
           },
-          signUp: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen()));
+          signUp: (id, pw) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SignUpScreen(id: id, pw: pw),
+              ),
+            );
           },
           onForgotPw: () => {},
         ),
