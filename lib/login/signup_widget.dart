@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:widget_test/common/common_text_field.dart';
 import 'package:widget_test/common/helper_style.dart';
 import 'package:widget_test/common/input_validation.dart';
 import 'package:widget_test/login/singup_form.dart';
@@ -27,6 +28,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
   final TextEditingController _pwCheckController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   String _idHelperText = "이메일 인증에 사용되는 아이디입니다";
   String _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
@@ -94,6 +96,34 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             onChange: (pwCheck) => setState(() => pwCheckValidate(pwCheck)),
             onClear: () => setState(() => pwCheckValidate(_pwCheckController.text)),
             controller: _pwCheckController,
+          ),
+          Row(
+            children: [
+              Flexible(
+                flex: 3,
+                child: CommonTextField(
+                  labelText: "이름",
+                  edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  controller: _nameController,
+                  onClear: () => setState(() {}),
+                ),
+              ),
+              Flexible(
+                flex: 2,
+                child: CommonTextField(
+                  labelText: "성별",
+                  edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  controller: TextEditingController(),
+                  onClear: () => setState(() {}),
+                ),
+              ),
+            ],
+          ),
+          CommonTextField(
+            labelText: "생년월일",
+            edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            controller: TextEditingController(),
+            onClear: () => setState(() {}),
           ),
           // BirthWidget(),
           StreamBuilder<bool>(
@@ -169,27 +199,6 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   }
 }
 
-class AgeWidget extends StatelessWidget {
-  const AgeWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 14,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Text("생년"), Text("월"), Text("일")],
-      ),
-    );
-  }
-}
-
 class SignUpButton extends StatelessWidget {
   const SignUpButton({
     super.key,
@@ -201,7 +210,7 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
