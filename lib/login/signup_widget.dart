@@ -150,6 +150,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
             labelText: "생년월일",
             edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             controller: _ageController,
+            isLast: true,
             onChange: (age) => setState(() => ageValidate(age)),
             onClear: () => setState(() => ageValidate("")),
           ),
