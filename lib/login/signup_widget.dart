@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:widget_test/common/common_text_field.dart';
 import 'package:widget_test/common/helper_style.dart';
 import 'package:widget_test/common/input_validation.dart';
@@ -9,26 +10,50 @@ import 'package:widget_test/login/singup_form.dart';
 import 'id_pw_field.dart';
 
 class SignUpWidget extends StatefulWidget {
+  final SignUpWidgetState signUpWidgetState = SignUpWidgetState();
   final String id;
   final String pw;
-  final Function(SignUpForm signUpForm) onSignUp;
+  final bool Function(String signUpForm) onSignUp;
+  final StreamController<bool> vaildStreamController = StreamController();
 
-  const SignUpWidget({
+  late final Widget action;
+
+  SignUpWidget({
     super.key,
     required this.id,
     required this.pw,
     required this.onSignUp,
-  });
+  }) {
+    action = StreamBuilder<bool>(
+        stream: vaildStreamController.stream,
+        builder: (context, snapshot) {
+          if (snapshot.data != null && snapshot.data!) {
+            return IconButton(
+              icon: const Icon(Icons.done, color: Colors.blue),
+              onPressed: () => signUpWidgetState.signUp(),
+            );
+          }
+          return const IconButton(
+            icon: Icon(Icons.done),
+            onPressed: null,
+          );
+        });
+  }
 
   @override
-  State<SignUpWidget> createState() => _SignUpWidgetState();
+  State<SignUpWidget> createState() {
+    // ignore: no_logic_in_create_state
+    return signUpWidgetState;
+  }
 }
 
-class _SignUpWidgetState extends State<SignUpWidget> {
+class SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
   final TextEditingController _pwCheckController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
 
   String _idHelperText = "이메일 인증에 사용되는 아이디입니다";
   String _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
@@ -40,7 +65,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
 
   final _pwCheckStreamController = StreamController<String>();
 
-  bool isValid = false;
+  get isValid => (idValid && pwValid && pwCheckValid && nameValid && ageValid && genderValid);
   bool idValid = false;
   bool pwValid = false;
   bool pwCheckValid = false;
@@ -105,7 +130,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                   labelText: "이름",
                   edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   controller: _nameController,
-                  onClear: () => setState(() {}),
+                  onChange: (name) => setState(() => nameValidate(name)),
+                  onClear: () => setState(() => nameValidate("")),
                 ),
               ),
               Flexible(
@@ -113,8 +139,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 child: CommonTextField(
                   labelText: "성별",
                   edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  controller: TextEditingController(),
-                  onClear: () => setState(() {}),
+                  controller: _genderController,
+                  onChange: (gender) => setState(() => genderValidate(gender)),
+                  onClear: () => setState(() => genderValidate("")),
                 ),
               ),
             ],
@@ -122,15 +149,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           CommonTextField(
             labelText: "생년월일",
             edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            controller: TextEditingController(),
-            onClear: () => setState(() {}),
-          ),
-          // BirthWidget(),
-          StreamBuilder<bool>(
-            stream: null,
-            builder: (context, snapshot) {
-              return SignUpButton(onPressed: (idValid && pwValid && pwCheckValid) ? signUp : null);
-            },
+            controller: _ageController,
+            onChange: (age) => setState(() => ageValidate(age)),
+            onClear: () => setState(() => ageValidate("")),
           ),
         ],
       ),
@@ -140,8 +161,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   // 회원가입 버튼 눌렀을 시
   void signUp() {
     // form 검증 로직
-    setState(() {});
-    widget.onSignUp(SignUpForm());
+    widget.onSignUp(
+        "id: ${_idController.text}, pw: ${_pwController.text}, name: ${_nameController.text}, gender: ${_genderController.text}, age: ${_ageController.text}");
   }
 
   // id 검증
@@ -159,6 +180,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       _idHelperStyle = HelperStyle(state: HelperState.error);
       idValid = false;
     }
+    validSink();
   }
 
   // pw 검증
@@ -175,6 +197,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       _pwHelperStyle = HelperStyle(state: HelperState.error);
       pwValid = false;
     }
+    validSink();
   }
 
   // pwCheck 검증
@@ -196,35 +219,25 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       _pwCheckHelperStyle = HelperStyle(state: HelperState.error);
       pwCheckValid = false;
     }
+    validSink();
   }
-}
 
-class SignUpButton extends StatelessWidget {
-  const SignUpButton({
-    super.key,
-    this.onPressed,
-  });
+  void ageValidate(String age) {
+    ageValid = age.isNotEmpty;
+    validSink();
+  }
 
-  final VoidCallback? onPressed;
+  void genderValidate(String gender) {
+    genderValid = gender.isNotEmpty;
+    validSink();
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(18),
-            backgroundColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
-          ),
-          child: const Text(
-            "회원가입",
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-      ),
-    );
+  void nameValidate(String name) {
+    nameValid = name.isNotEmpty;
+    validSink();
+  }
+
+  void validSink() {
+    widget.vaildStreamController.sink.add(isValid);
   }
 }

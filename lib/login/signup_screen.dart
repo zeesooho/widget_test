@@ -9,12 +9,21 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var signupWidget = SignUpWidget(
+      id: id,
+      pw: pw,
+      onSignUp: (signUpForm) {
+        print(signUpForm);
+        return false;
+      },
+    );
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text("회원가입"),
+        actions: [signupWidget.action],
       ),
-      body: Center(child: SignUpWidget(id: id, pw: pw, onSignUp: (signUpForm) {})),
+      body: signupWidget,
     );
   }
 }
