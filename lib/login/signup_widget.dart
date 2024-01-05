@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:widget_test/common/helper_style.dart';
 import 'package:widget_test/common/input_validation.dart';
-import 'package:widget_test/login/common_text_field.dart';
 import 'package:widget_test/login/singup_form.dart';
+
+import 'id_pw_field.dart';
 
 class SignUpWidget extends StatefulWidget {
   final String id;
@@ -40,8 +42,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   bool idValid = false;
   bool pwValid = false;
   bool pwCheckValid = false;
-  bool birthValid = false;
   bool nameValid = false;
+  bool ageValid = false;
   bool genderValid = false;
 
   @override
@@ -66,7 +68,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonTextField(
+          IdPwField(
             hintText: "dongajul@dongajul.com",
             labelText: "아이디",
             helperText: _idHelperText,
@@ -75,7 +77,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             onClear: () => setState(() => idValidate(_idController.text)),
             controller: _idController,
           ),
-          CommonTextField(
+          IdPwField(
             labelText: "비밀번호",
             helperText: _pwHelperText,
             helperStyle: _pwHelperStyle,
@@ -84,7 +86,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             onClear: () => setState(() => pwValidate(_pwController.text)),
             controller: _pwController,
           ),
-          CommonTextField(
+          IdPwField(
             labelText: "비밀번호 확인",
             helperText: _pwCheckHelperText,
             helperStyle: _pwCheckHelperStyle,
@@ -167,8 +169,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   }
 }
 
-class BirthWidget extends StatelessWidget {
-  const BirthWidget({
+class AgeWidget extends StatelessWidget {
+  const AgeWidget({
     super.key,
   });
 

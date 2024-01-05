@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:widget_test/login/login_screen.dart';
-
-import 'login/signup_screen.dart';
+import 'package:widget_test/login/signup_screen.dart';
 
 void main() {
   runApp(const MyApp());

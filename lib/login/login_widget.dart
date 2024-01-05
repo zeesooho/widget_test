@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:widget_test/common/input_validation.dart';
 
-import 'common_text_field.dart';
+import 'package:widget_test/common/helper_style.dart';
+import 'id_pw_field.dart';
 
 class LoginWidget extends StatefulWidget {
   final bool Function(String, String) signIn;
@@ -40,7 +41,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CommonTextField(
+          IdPwField(
             hintText: "dongajul@dongajul.com",
             labelText: "아이디",
             helperText: _idHelperText,
@@ -49,7 +50,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             onClear: () => setState(() => idValidate(_idController.text)),
             controller: _idController,
           ),
-          CommonTextField(
+          IdPwField(
             labelText: "비밀번호",
             helperText: _pwHelperText,
             helperStyle: _pwHelperStyle,
