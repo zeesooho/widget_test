@@ -26,7 +26,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _pwController = TextEditingController();
   final TextEditingController _pwCheckController = TextEditingController();
 
-  String _idHelperText = "이메일 형식으로 입력해주세요";
+  String _idHelperText = "이메일 인증에 사용되는 아이디입니다";
   String _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
   String _pwCheckHelperText = "위와 동일하게 입력해주세요";
 
@@ -51,8 +51,8 @@ class _SignUpWidgetState extends State<SignUpWidget> {
     _idController.text = widget.id;
     _pwController.text = widget.pw;
 
-    if (widget.id.isNotEmpty) idValidate(widget.id);
-    if (widget.pw.isNotEmpty) pwValidate(widget.pw);
+    idValidate(widget.id);
+    pwValidate(widget.pw);
 
     _pwCheckController.addListener(() {
       _pwCheckStreamController.sink.add(_pwCheckController.text);
@@ -118,6 +118,10 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       _idHelperText = "올바른 형식입니다";
       _idHelperStyle = HelperStyle(state: HelperState.correct);
       idValid = true;
+    } else if (id.isEmpty) {
+      _idHelperText = "이메일 인증에 사용되는 아이디입니다";
+      _idHelperStyle = HelperStyle(state: HelperState.normal);
+      idValid = false;
     } else {
       _idHelperText = "이메일 형식으로 입력해주세요";
       _idHelperStyle = HelperStyle(state: HelperState.error);
@@ -131,6 +135,9 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       _pwHelperText = "올바른 형식입니다";
       _pwHelperStyle = HelperStyle(state: HelperState.correct);
       pwValid = true;
+    } else if (pw.isEmpty) {
+      _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
+      _pwHelperStyle = HelperStyle(state: HelperState.normal);
     } else {
       _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
       _pwHelperStyle = HelperStyle(state: HelperState.error);
@@ -139,11 +146,15 @@ class _SignUpWidgetState extends State<SignUpWidget> {
   }
 
   // pwCheck 검증
-  void pwCheckValidate(pwCheck) {
+  void pwCheckValidate(String pwCheck) {
     if (pwValid && pwCheck == _pwController.text) {
       _pwCheckHelperText = "확인되었습니다";
       _pwCheckHelperStyle = HelperStyle(state: HelperState.correct);
       pwCheckValid = true;
+    } else if (pwCheck.isEmpty) {
+      _pwCheckHelperText = "위와 동일하게 입력해주세요";
+      _pwCheckHelperStyle = HelperStyle(state: HelperState.normal);
+      pwCheckValid = false;
     } else if (_pwController.text.isNotEmpty && !pwValid) {
       _pwCheckHelperText = "비밀번호 형식이 맞지 않습니다";
       _pwCheckHelperStyle = HelperStyle(state: HelperState.error);
