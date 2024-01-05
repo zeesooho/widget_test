@@ -61,12 +61,16 @@ class CommonSuffixIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Visibility(
       visible: widget.controller.text.isNotEmpty,
-      child: IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            widget.controller.clear();
-            widget.onClear();
-          }),
+      child: Focus(
+        descendantsAreFocusable: false,
+        canRequestFocus: false,
+        child: IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              widget.controller.clear();
+              widget.onClear();
+            }),
+      ),
     );
   }
 }
