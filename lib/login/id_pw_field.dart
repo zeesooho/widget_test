@@ -15,6 +15,7 @@ class IdPwField extends CommonTextField {
     super.helperStyle,
     super.onChange,
     super.isLast,
+    super.padding,
     required super.controller,
     required super.onClear,
   });
@@ -38,7 +39,7 @@ class _IdPwFieldState extends State<IdPwField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: widget.padding ?? const EdgeInsets.all(0),
       child: TextField(
         decoration: commonDecoration(
           widget,

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'helper_style.dart';
@@ -13,7 +14,7 @@ class CommonTextField extends StatefulWidget {
   final TextEditingController controller;
   final Function(String)? onChange;
   final Function() onClear;
-  final EdgeInsets edgeInsets;
+  final EdgeInsets? padding;
 
   const CommonTextField({
     super.key,
@@ -23,10 +24,10 @@ class CommonTextField extends StatefulWidget {
     this.helperText,
     this.helperStyle,
     this.isLast = false,
-    required this.controller,
     this.onChange,
+    this.padding,
+    required this.controller,
     required this.onClear,
-    this.edgeInsets = const EdgeInsets.all(8.0),
   });
 
   @override
@@ -47,14 +48,13 @@ class _CommonTextFieldState extends State<CommonTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: widget.edgeInsets,
+      padding: widget.padding ?? const EdgeInsets.all(0),
       child: TextField(
         decoration: commonDecoration(widget, CommonSuffixIcon(widget: widget, visible: _visible)),
         controller: widget.controller,
         onChanged: widget.onChange,
         focusNode: _focusNode,
         textInputAction: widget.isLast ? TextInputAction.done : TextInputAction.next,
-        onSubmitted: widget.isLast ? (_) => FocusScope.of(context).unfocus() : (_) => FocusScope.of(context).nextFocus(),
       ),
     );
   }
@@ -95,10 +95,13 @@ InputDecoration commonDecoration(CommonTextField widget, Widget suffixIcon) {
     labelText: widget.labelText,
     helperText: widget.helperText,
     helperStyle: widget.helperStyle?.style,
+    // enabledBorder: getInputBorder(CupertinoColors.activeBlue),
+    // focusedBorder: getInputBorder(CupertinoColors.activeBlue, bold: true),
     enabledBorder: getInputBorder(const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56)),
     focusedBorder: getInputBorder(const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56), bold: true),
-    errorBorder: getInputBorder(Colors.red),
-    fillColor: Colors.grey.shade300,
+    errorBorder: getInputBorder(CupertinoColors.systemRed),
+    fillColor: CupertinoColors.white,
+    filled: true,
     suffixIcon: suffixIcon,
   );
 }
