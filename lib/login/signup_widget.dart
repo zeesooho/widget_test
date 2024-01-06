@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:widget_test/common/common_text_field.dart';
@@ -29,7 +30,7 @@ class SignUpWidget extends StatefulWidget {
         builder: (context, snapshot) {
           if (snapshot.data != null && snapshot.data!) {
             return IconButton(
-              icon: const Icon(Icons.done, color: Colors.blue),
+              icon: const Icon(Icons.done, color: CupertinoColors.activeBlue),
               onPressed: () => signUpWidgetState.signUp(),
             );
           }
@@ -72,6 +73,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
   bool nameValid = false;
   bool ageValid = false;
   bool genderValid = false;
+  var isSelected2 = [false, false];
 
   @override
   void initState() {
@@ -91,70 +93,104 @@ class SignUpWidgetState extends State<SignUpWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IdPwField(
-            hintText: "dongajul@dongajul.com",
-            labelText: "아이디",
-            helperText: _idHelperText,
-            helperStyle: _idHelperStyle,
-            onChange: (id) => setState(() => idValidate(id)),
-            onClear: () => setState(() => idValidate(_idController.text)),
-            controller: _idController,
-          ),
-          IdPwField(
-            labelText: "비밀번호",
-            helperText: _pwHelperText,
-            helperStyle: _pwHelperStyle,
-            isPw: true,
-            onChange: (pw) => setState(() => pwValidate(pw)),
-            onClear: () => setState(() => pwValidate(_pwController.text)),
-            controller: _pwController,
-          ),
-          IdPwField(
-            labelText: "비밀번호 확인",
-            helperText: _pwCheckHelperText,
-            helperStyle: _pwCheckHelperStyle,
-            isPw: true,
-            onChange: (pwCheck) => setState(() => pwCheckValidate(pwCheck)),
-            onClear: () => setState(() => pwCheckValidate(_pwCheckController.text)),
-            controller: _pwCheckController,
-          ),
-          Row(
-            children: [
-              Flexible(
-                flex: 3,
-                child: CommonTextField(
-                  labelText: "이름",
-                  edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  controller: _nameController,
-                  onChange: (name) => setState(() => nameValidate(name)),
-                  onClear: () => setState(() => nameValidate("")),
-                ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 14),
+            const Text("계정 정보", style: TextStyle(fontSize: 16)),
+            IdPwField(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              hintText: "dongajul@dongajul.com",
+              labelText: "아이디",
+              helperText: _idHelperText,
+              helperStyle: _idHelperStyle,
+              onChange: (id) => setState(() => idValidate(id)),
+              onClear: () => setState(() => idValidate(_idController.text)),
+              controller: _idController,
+            ),
+            IdPwField(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              labelText: "비밀번호",
+              helperText: _pwHelperText,
+              helperStyle: _pwHelperStyle,
+              isPw: true,
+              onChange: (pw) => setState(() => pwValidate(pw)),
+              onClear: () => setState(() => pwValidate(_pwController.text)),
+              controller: _pwController,
+            ),
+            IdPwField(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              labelText: "비밀번호 확인",
+              helperText: _pwCheckHelperText,
+              helperStyle: _pwCheckHelperStyle,
+              isPw: true,
+              onChange: (pwCheck) => setState(() => pwCheckValidate(pwCheck)),
+              onClear: () => setState(() => pwCheckValidate(_pwCheckController.text)),
+              controller: _pwCheckController,
+            ),
+            const SizedBox(height: 45),
+            const Text("기본 정보", style: TextStyle(fontSize: 16)),
+            CommonTextField(
+              labelText: "이름",
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              controller: _nameController,
+              onChange: (name) => setState(() => nameValidate(name)),
+              onClear: () => setState(() => nameValidate("")),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: CommonTextField(
+                      labelText: "생년월일",
+                      padding: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
+                      controller: _ageController,
+                      isLast: true,
+                      onChange: (age) => setState(() => ageValidate(age)),
+                      onClear: () => setState(() => ageValidate("")),
+                    ),
+                  ),
+                  ToggleButtons(
+                    isSelected: isSelected2,
+                    disabledColor: Colors.grey,
+                    selectedColor: Colors.white,
+                    fillColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
+                    // borderColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
+                    // selectedBorderColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
+                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                    onPressed: (index) {
+                      setState(() {
+                        isSelected2[index] = true;
+                        isSelected2[1 - index] = false;
+                        genderValid = true;
+                      });
+                    },
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 16),
+                        child: Text(
+                          "남자",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 16),
+                        child: Text(
+                          "여자",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
               ),
-              Flexible(
-                flex: 2,
-                child: CommonTextField(
-                  labelText: "성별",
-                  edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  controller: _genderController,
-                  onChange: (gender) => setState(() => genderValidate(gender)),
-                  onClear: () => setState(() => genderValidate("")),
-                ),
-              ),
-            ],
-          ),
-          CommonTextField(
-            labelText: "생년월일",
-            edgeInsets: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            controller: _ageController,
-            isLast: true,
-            onChange: (age) => setState(() => ageValidate(age)),
-            onClear: () => setState(() => ageValidate("")),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

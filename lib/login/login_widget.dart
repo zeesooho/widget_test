@@ -37,35 +37,40 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IdPwField(
-            hintText: "dongajul@dongajul.com",
-            labelText: "아이디",
-            helperText: _idHelperText,
-            helperStyle: _idHelperStyle,
-            onChange: (id) => setState(() => idValidate(id)),
-            onClear: () => setState(() => idValidate(_idController.text)),
-            controller: _idController,
-          ),
-          IdPwField(
-            labelText: "비밀번호",
-            helperText: _pwHelperText,
-            helperStyle: _pwHelperStyle,
-            isPw: true,
-            onChange: (pw) => setState(() => pwValidate(pw)),
-            onClear: () => setState(() => pwValidate(_pwController.text)),
-            controller: _pwController,
-          ),
-          ForgotPassword(
-            visibility: tried,
-            onPressed: widget.onForgotPw,
-          ),
-          SignInButton(onPressed: idValid && pwValid ? signIn : null),
-          SignUpButton(onPressed: signUp),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IdPwField(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              hintText: "dongajul@dongajul.com",
+              labelText: "아이디",
+              helperText: _idHelperText,
+              helperStyle: _idHelperStyle,
+              onChange: (id) => setState(() => idValidate(id)),
+              onClear: () => setState(() => idValidate(_idController.text)),
+              controller: _idController,
+            ),
+            IdPwField(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              labelText: "비밀번호",
+              helperText: _pwHelperText,
+              helperStyle: _pwHelperStyle,
+              isPw: true,
+              onChange: (pw) => setState(() => pwValidate(pw)),
+              onClear: () => setState(() => pwValidate(_pwController.text)),
+              controller: _pwController,
+            ),
+            ForgotPassword(
+              visibility: tried,
+              onPressed: widget.onForgotPw,
+            ),
+            SignInButton(onPressed: idValid && pwValid ? signIn : null),
+            SignUpButton(onPressed: signUp),
+          ],
+        ),
       ),
     );
   }
@@ -135,13 +140,14 @@ class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(18),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             backgroundColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
           ),
           child: const Text(
@@ -165,13 +171,14 @@ class SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: SizedBox(
         width: double.infinity,
         child: OutlinedButton(
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.all(18),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             side: const BorderSide(
               color: Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
             ),
