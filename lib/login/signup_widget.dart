@@ -53,8 +53,6 @@ class SignUpWidgetState extends State<SignUpWidget> {
   final TextEditingController _pwController = TextEditingController();
   final TextEditingController _pwCheckController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
 
   String _idHelperText = "이메일 인증에 사용되는 아이디입니다";
   String _pwHelperText = "숫자, 문자를 포함하여 8글자 이상 입력해주세요";
@@ -73,7 +71,10 @@ class SignUpWidgetState extends State<SignUpWidget> {
   bool nameValid = false;
   bool ageValid = false;
   bool genderValid = false;
-  var isSelected2 = [false, false];
+  List<bool> isSelected2 = [false, false];
+
+  int age = 0;
+  bool gender = false;
 
   @override
   void initState() {
@@ -135,56 +136,64 @@ class SignUpWidgetState extends State<SignUpWidget> {
             const Text("기본 정보", style: TextStyle(fontSize: 16)),
             CommonTextField(
               labelText: "이름",
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               controller: _nameController,
               onChange: (name) => setState(() => nameValidate(name)),
               onClear: () => setState(() => nameValidate("")),
+              isLast: true,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 children: [
                   Flexible(
-                    child: CommonTextField(
-                      labelText: "생년월일",
-                      padding: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
-                      controller: _ageController,
-                      isLast: true,
-                      onChange: (age) => setState(() => ageValidate(age)),
-                      onClear: () => setState(() => ageValidate("")),
+                    flex: 3,
+                    child: CupertinoPicker.builder(
+                      itemExtent: 48,
+                      childCount: 54,
+                      onSelectedItemChanged: (index) => setState(
+                        () {
+                          age = index + 17;
+                          ageValidate(age);
+                        },
+                      ),
+                      itemBuilder: (context, index) {
+                        if (index == 0) return const Center(child: Text("나이 선택"));
+                        return Center(child: Text("${index + 17}"));
+                      },
                     ),
                   ),
-                  ToggleButtons(
-                    isSelected: isSelected2,
-                    disabledColor: Colors.grey,
-                    selectedColor: Colors.white,
-                    fillColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
-                    // borderColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
-                    // selectedBorderColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
-                    borderRadius: const BorderRadius.all(Radius.circular(4)),
-                    onPressed: (index) {
-                      setState(() {
-                        isSelected2[index] = true;
-                        isSelected2[1 - index] = false;
-                        genderValid = true;
-                      });
-                    },
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 16),
-                        child: Text(
-                          "남자",
-                          style: TextStyle(fontSize: 16),
-                        ),
+                  Flexible(
+                    flex: 4,
+                    child: LayoutBuilder(
+                      builder: (context, constraint) => ToggleButtons(
+                        constraints: BoxConstraints.expand(width: constraint.maxWidth / 2 - 4),
+                        isSelected: isSelected2,
+                        disabledColor: Colors.grey,
+                        selectedColor: Colors.white,
+                        fillColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
+                        borderRadius: const BorderRadius.all(Radius.circular(4)),
+                        onPressed: (index) {
+                          setState(() {
+                            isSelected2[index] = true;
+                            isSelected2[1 - index] = false;
+                            genderValid = true;
+                            gender = (1 - index) == 0 ? true : false;
+                            validSink();
+                          });
+                        },
+                        children: const [
+                          Text(
+                            "남자",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            "여자",
+                            style: TextStyle(fontSize: 16),
+                          )
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 16),
-                        child: Text(
-                          "여자",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -198,8 +207,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
   // 회원가입 버튼 눌렀을 시
   void signUp() {
     // form 검증 로직
-    widget.onSignUp(
-        "id: ${_idController.text}, pw: ${_pwController.text}, name: ${_nameController.text}, gender: ${_genderController.text}, age: ${_ageController.text}");
+    widget.onSignUp("id: ${_idController.text}, pw: ${_pwController.text}, name: ${_nameController.text}, age: $age, gender: $gender");
   }
 
   // id 검증
@@ -259,13 +267,8 @@ class SignUpWidgetState extends State<SignUpWidget> {
     validSink();
   }
 
-  void ageValidate(String age) {
-    ageValid = age.isNotEmpty;
-    validSink();
-  }
-
-  void genderValidate(String gender) {
-    genderValid = gender.isNotEmpty;
+  void ageValidate(int age) {
+    ageValid = age > 17;
     validSink();
   }
 
