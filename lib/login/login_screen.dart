@@ -10,7 +10,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100 ,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         centerTitle: true,
         title: const Text("DongAJul Widget Test"),
