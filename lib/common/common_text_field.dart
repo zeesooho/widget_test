@@ -16,32 +16,43 @@ class CommonTextField extends StatefulWidget {
   final EdgeInsets edgeInsets;
 
   const CommonTextField({
-    Key? key,
+    super.key,
     this.icon,
     this.labelText,
     this.hintText,
     this.helperText,
     this.helperStyle,
     this.isLast = false,
-    this.edgeInsets = const EdgeInsets.all(8.0),
     required this.controller,
     this.onChange,
     required this.onClear,
-  }) : super(key: key);
+    this.edgeInsets = const EdgeInsets.all(8.0),
+  });
 
   @override
   State<StatefulWidget> createState() => _CommonTextFieldState();
 }
 
 class _CommonTextFieldState extends State<CommonTextField> {
+  final FocusNode _focusNode = FocusNode();
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() => setState(() => _visible = _focusNode.hasFocus && widget.controller.text.isNotEmpty));
+    widget.controller.addListener(() => setState(() => _visible = _focusNode.hasFocus && widget.controller.text.isNotEmpty));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.edgeInsets,
       child: TextField(
-        decoration: commonDecoration(widget, CommonSuffixIcon(widget: widget)),
+        decoration: commonDecoration(widget, CommonSuffixIcon(widget: widget, visible: _visible)),
         controller: widget.controller,
         onChanged: widget.onChange,
+        focusNode: _focusNode,
         textInputAction: widget.isLast ? TextInputAction.done : TextInputAction.next,
         onSubmitted: widget.isLast ? (_) => FocusScope.of(context).unfocus() : (_) => FocusScope.of(context).nextFocus(),
       ),
@@ -50,17 +61,19 @@ class _CommonTextFieldState extends State<CommonTextField> {
 }
 
 class CommonSuffixIcon extends StatelessWidget {
+  final bool visible;
+  final CommonTextField widget;
+
   const CommonSuffixIcon({
     super.key,
+    required this.visible,
     required this.widget,
   });
-
-  final CommonTextField widget;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: widget.controller.text.isNotEmpty,
+      visible: visible,
       child: Focus(
         descendantsAreFocusable: false,
         canRequestFocus: false,

@@ -6,7 +6,7 @@ class IdPwField extends CommonTextField {
   final bool isPw;
 
   const IdPwField({
-    Key? key,
+    super.key,
     this.isPw = false,
     super.icon,
     super.labelText,
@@ -17,14 +17,23 @@ class IdPwField extends CommonTextField {
     super.isLast,
     required super.controller,
     required super.onClear,
-  }) : super(key: key);
+  });
 
   @override
   State<IdPwField> createState() => _IdPwFieldState();
 }
 
 class _IdPwFieldState extends State<IdPwField> {
+  final FocusNode _focusNode = FocusNode();
   bool _isHide = true;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() => setState(() => _visible = _focusNode.hasFocus && widget.controller.text.isNotEmpty));
+    widget.controller.addListener(() => setState(() => _visible = _focusNode.hasFocus && widget.controller.text.isNotEmpty));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +44,11 @@ class _IdPwFieldState extends State<IdPwField> {
           widget,
           PwSuffixIcon(
             widget: widget,
+            visible: _visible,
             toggleHide: toggleHide,
           ),
         ),
+        focusNode: _focusNode,
         controller: widget.controller,
         onChanged: widget.onChange,
         obscureText: widget.isPw && _isHide,
@@ -61,10 +72,13 @@ class _IdPwFieldState extends State<IdPwField> {
 }
 
 class PwSuffixIcon extends StatelessWidget {
+  final bool visible;
+
   const PwSuffixIcon({
     super.key,
     required this.widget,
     required this.toggleHide,
+    required this.visible,
   });
 
   final IdPwField widget;
@@ -77,7 +91,7 @@ class PwSuffixIcon extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Visibility(
-          visible: widget.controller.text.isNotEmpty && widget.isPw,
+          visible: widget.isPw && visible,
           child: Focus(
             descendantsAreFocusable: false,
             canRequestFocus: false,
@@ -88,7 +102,7 @@ class PwSuffixIcon extends StatelessWidget {
           ),
         ),
         Visibility(
-          visible: widget.controller.text.isNotEmpty,
+          visible: visible,
           child: Focus(
             descendantsAreFocusable: false,
             canRequestFocus: false,
