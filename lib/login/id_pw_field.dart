@@ -55,7 +55,6 @@ class _IdPwFieldState extends State<IdPwField> {
         obscureText: widget.isPw && _isHide,
         obscuringCharacter: "●",
         textInputAction: widget.isLast ? TextInputAction.done : TextInputAction.next,
-        onSubmitted: widget.isLast ? (_) => FocusScope.of(context).unfocus() : (_) => FocusScope.of(context).nextFocus(),
         keyboardType: widget.isPw ? TextInputType.text : TextInputType.emailAddress,
         inputFormatters: widget.isPw ? <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9~!@#\$%^&*]'))] : null,
       ),
