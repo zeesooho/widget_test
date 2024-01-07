@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class SignUpWidget extends StatefulWidget {
   final SignUpWidgetState signUpWidgetState = SignUpWidgetState();
   final String id;
   final String pw;
-  final bool Function(String signUpForm) onSignUp;
+  final Future<bool> Function(SignUpForm signUpForm) onSignUp;
   final StreamController<bool> vaildStreamController = StreamController();
 
   late final Widget action;
@@ -148,19 +149,22 @@ class SignUpWidgetState extends State<SignUpWidget> {
                 children: [
                   Flexible(
                     flex: 3,
-                    child: CupertinoPicker.builder(
-                      itemExtent: 48,
-                      childCount: 54,
-                      onSelectedItemChanged: (index) => setState(
-                        () {
-                          age = index + 17;
-                          ageValidate(age);
+                    child: ScrollConfiguration(
+                      behavior: WebScrollBehavior(),
+                      child: CupertinoPicker.builder(
+                        itemExtent: 48,
+                        childCount: 54,
+                        onSelectedItemChanged: (index) => setState(
+                          () {
+                            age = index + 17;
+                            ageValidate(age);
+                          },
+                        ),
+                        itemBuilder: (context, index) {
+                          if (index == 0) return const Center(child: Text("나이 선택"));
+                          return Center(child: Text("${index + 17}"));
                         },
                       ),
-                      itemBuilder: (context, index) {
-                        if (index == 0) return const Center(child: Text("나이 선택"));
-                        return Center(child: Text("${index + 17}"));
-                      },
                     ),
                   ),
                   Flexible(
@@ -205,9 +209,15 @@ class SignUpWidgetState extends State<SignUpWidget> {
   }
 
   // 회원가입 버튼 눌렀을 시
-  void signUp() {
+  void signUp() async {
     // form 검증 로직
-    widget.onSignUp("id: ${_idController.text}, pw: ${_pwController.text}, name: ${_nameController.text}, age: $age, gender: $gender");
+    var response = await widget.onSignUp(SignUpForm(
+      email: _idController.text,
+      password: _pwController.text,
+      name: _nameController.text,
+      age: age,
+      gender: gender,
+    ));
   }
 
   // id 검증
@@ -280,4 +290,14 @@ class SignUpWidgetState extends State<SignUpWidget> {
   void validSink() {
     widget.vaildStreamController.sink.add(isValid);
   }
+}
+
+class WebScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }

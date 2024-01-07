@@ -1,14 +1,15 @@
 class SignUpForm {
-  // "email": "string",
-  // "password": "string",
-  // "name": "string",
-  // "age": 0,
-  // "gender": "string",
-  // "image": "string",
-  // "major": "string",
-  // "school": "string",
-  // "job_description": "string",
-  // "company_name": "string",
-  // "company_welfare": "string",
-  // "company_location": "string"
+  final String email;
+  final String password;
+  final String name;
+  final int age;
+  final bool gender;
+
+  SignUpForm({
+    required this.email,
+    required this.password,
+    required this.name,
+    required this.age,
+    required this.gender,
+  });
 }
