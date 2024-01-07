@@ -5,7 +5,7 @@ import 'package:widget_test/common/helper_style.dart';
 import 'id_pw_field.dart';
 
 class LoginWidget extends StatefulWidget {
-  final bool Function(String, String) signIn;
+  final Future<bool> Function(String, String) signIn;
   final Function(String, String) signUp;
   final Function() onForgotPw;
 
@@ -97,7 +97,12 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 
-  void signIn() => setState(() => tried = widget.signIn(_idController.text, _pwController.text));
+  void signIn() async {
+    tried = !await widget.signIn(_idController.text, _pwController.text);
+    _pwHelperStyle = HelperStyle(state: HelperState.error);
+    setState(() => {});
+  }
+
   void signUp() => setState(() => widget.signUp(_idController.text, _pwController.text));
 }
 
