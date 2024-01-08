@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:widget_test/login/signup_widget.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -12,9 +13,9 @@ class SignUpScreen extends StatelessWidget {
     var signupWidget = SignUpWidget(
       id: id,
       pw: pw,
-      onSignUp: (signUpForm) {
-        print(signUpForm);
-        return false;
+      onSignUp: (signUpForm) async {
+        if (context.mounted) Navigator.of(context).pop();
+        return true;
       },
     );
     return Scaffold(

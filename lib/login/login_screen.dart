@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
+import 'package:widget_test/home/home_screen.dart';
+
 import 'package:widget_test/login/login_widget.dart';
 import 'package:widget_test/login/signup_screen.dart';
 
@@ -17,8 +22,14 @@ class LoginScreen extends StatelessWidget {
       ),
       body: Center(
         child: LoginWidget(
-          signIn: (id, pw) {
-            return id != pw;
+          signIn: (id, pw) async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
+            return true;
           },
           signUp: (id, pw) {
             Navigator.push(

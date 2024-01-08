@@ -41,7 +41,7 @@ class PostUserData {
     required this.type,
     required this.id,
     required this.name,
-    required this.image,
+    this.image,
   });
 
   factory PostUserData.fromJson(Map<String, dynamic> json) => PostUserData(

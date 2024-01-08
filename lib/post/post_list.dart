@@ -17,8 +17,11 @@ class _PostListState extends State<PostList> {
     return ListView.builder(
       itemCount: widget.postDatas.length,
       itemBuilder: (context, index) {
-        return PostCard(
-          postData: widget.postDatas[index],
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: PostCard(
+            postData: widget.postDatas[index],
+          ),
         );
       },
     );
