@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:widget_test/post/post_card.dart';
+import 'package:widget_test/post/post_data.dart';
 import 'package:widget_test/post/post_list.dart';
 
 class PostScreen extends StatefulWidget {
@@ -16,9 +15,22 @@ class _PostScreenState extends State<PostScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("게시판"),
+        title: const Text("게시판"),
       ),
-      body: PostList(),
+      body: PostList(
+        postDatas: [
+          PostData(
+            id: 1,
+            title: '제목',
+            content: '글내용',
+            view: 1,
+            hit: 1,
+            createdAt: "2024-01-08",
+            updatedAt: "2024-01-08",
+            user: PostUserData(type: "icumbent", id: 1, name: "현직자1", image: "image"),
+          ),
+        ],
+      ),
     );
   }
 }
