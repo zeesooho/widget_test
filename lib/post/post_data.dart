@@ -48,6 +48,6 @@ class PostUserData {
         type: json['type'],
         id: json['id'],
         name: json['name'],
-        image: json['image'],
+        image: json['image'].toString().isNotEmpty ? json['image'] : null,
       );
 }
