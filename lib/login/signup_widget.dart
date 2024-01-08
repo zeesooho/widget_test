@@ -291,6 +291,12 @@ class SignUpWidgetState extends State<SignUpWidget> {
   void validSink() {
     widget.vaildStreamController.sink.add(isValid);
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pwCheckController.removeListener(() {});
+  }
 }
 
 class WebScrollBehavior extends MaterialScrollBehavior {

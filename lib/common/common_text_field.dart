@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -57,6 +56,13 @@ class _CommonTextFieldState extends State<CommonTextField> {
         textInputAction: widget.isLast ? TextInputAction.done : TextInputAction.next,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode.removeListener(() {});
+    widget.controller.removeListener(() {});
   }
 }
 
