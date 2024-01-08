@@ -96,7 +96,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +137,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
             const Text("기본 정보", style: TextStyle(fontSize: 16)),
             CommonTextField(
               labelText: "이름",
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               controller: _nameController,
               onChange: (name) => setState(() => nameValidate(name)),
               onClear: () => setState(() => nameValidate("")),
@@ -146,20 +146,18 @@ class SignUpWidgetState extends State<SignUpWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Flexible(
-                    flex: 3,
                     child: ScrollConfiguration(
                       behavior: WebScrollBehavior(),
                       child: CupertinoPicker.builder(
                         itemExtent: 48,
                         childCount: 54,
-                        onSelectedItemChanged: (index) => setState(
-                          () {
-                            age = index + 17;
-                            ageValidate(age);
-                          },
-                        ),
+                        onSelectedItemChanged: (index) => setState(() {
+                          age = index + 17;
+                          ageValidate(age);
+                        }),
                         itemBuilder: (context, index) {
                           if (index == 0) return const Center(child: Text("나이 선택"));
                           return Center(child: Text("${index + 17}"));
@@ -168,7 +166,6 @@ class SignUpWidgetState extends State<SignUpWidget> {
                     ),
                   ),
                   Flexible(
-                    flex: 4,
                     child: LayoutBuilder(
                       builder: (context, constraint) => ToggleButtons(
                         constraints: BoxConstraints.expand(width: constraint.maxWidth / 2 - 4),
@@ -194,7 +191,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
                           Text(
                             "여자",
                             style: TextStyle(fontSize: 16),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -218,6 +215,10 @@ class SignUpWidgetState extends State<SignUpWidget> {
       age: age,
       gender: gender,
     ));
+
+    if (response && context.mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   // id 검증
