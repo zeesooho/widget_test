@@ -13,7 +13,7 @@ class PostCard extends StatelessWidget {
   PostCard({
     Key? key,
     required this.postData,
-    this.contentMaxLines = 3,
+    this.contentMaxLines = 1,
     this.contentOverflow = TextOverflow.ellipsis,
   }) : super(key: key);
 
@@ -54,31 +54,27 @@ class PostCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ProfileImage(uri: postData.user.image),
+                      ProfileImage(radius: 25, uri: postData.user.image),
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            postData.user.type == 'incumbent'
+                                ? _incumbentTag
+                                : _studentTag,
                             Text(postData.user.name),
-                            postData.user.type == 'incumbent' ? _incumbentTag : _studentTag,
                           ],
                         ),
                       ),
                       Expanded(
-                        child: Column(
-                          children: [
-                            Text(postData.createdAt.toSimpleTime(context)),
-                            Visibility(
-                              visible: postData.createdAt != postData.updatedAt,
-                              child: const Text("수정됨", style: TextStyle(fontSize: 12)),
-                            ),
-                          ],
-                        ),
+                        flex: 2,
+                        child: Text(postData.createdAt.toSimpleTime()),
                       ),
                       Expanded(
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(CupertinoIcons.eye),
                             Text("  ${postData.hit}"),
@@ -87,8 +83,9 @@ class PostCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(CupertinoIcons.hand_thumbsup),
+                            const Icon(CupertinoIcons.heart),
                             Text(" ${postData.hit}"),
                           ],
                         ),
@@ -96,19 +93,27 @@ class PostCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  const Divider(),
                   SizedBox(
                     width: double.infinity,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(postData.title),
-                        const Divider(),
                         Text(
-                          postData.content,
-                          maxLines: contentMaxLines,
-                          style: TextStyle(overflow: contentOverflow),
+                          postData.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          postData.content.toSimpleContent(contentMaxLines),
+                          style: TextStyle(
+                            overflow: contentOverflow,
+                            fontSize: 14,
+                            height: 1.7,
+                          ),
                         ),
                       ],
                     ),
@@ -126,10 +131,12 @@ class PostCard extends StatelessWidget {
 
 class ProfileImage extends StatelessWidget {
   final String? uri;
+  final double radius;
 
   const ProfileImage({
     super.key,
     this.uri,
+    this.radius = 30,
   });
 
   @override
@@ -138,29 +145,50 @@ class ProfileImage extends StatelessWidget {
       padding: const EdgeInsets.only(right: 14.0),
       child: uri != null
           ? CircleAvatar(
-              radius: 30,
+              radius: radius,
               backgroundImage: NetworkImage(uri!),
             )
-          : const CircleAvatar(
-              radius: 30,
-              backgroundImage: AssetImage("asset/images/default_profile_image.jpg"),
+          : CircleAvatar(
+              radius: radius,
+              backgroundImage:
+                  const AssetImage("asset/images/default_profile_image.jpg"),
             ),
     );
   }
 }
 
-extension TimeFormat on String {
+extension PostCardFormat on String {
   //이메일 포맷 검증
-  String toSimpleTime(context) {
+  String toSimpleTime() {
     DateTime now = DateTime.now().toLocal();
+    DateTime beforeHour =
+        DateTime.now().toLocal().subtract(const Duration(hours: 1));
     DateTime todayStart = DateTime(now.year, now.month, now.day);
 
     DateTime dateTime = DateTime.parse(this).toLocal();
 
-    if (dateTime.isBefore(todayStart)) {
-      return DateFormat.Md().format(dateTime);
-    } else {
+    if (dateTime.isAfter(beforeHour)) {
+      // 1시간 이내
+      var gapMinute =
+          (now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch) /
+              60000;
+      if (gapMinute < 2) return "방금전";
+      return "${gapMinute.toInt()}분 전";
+    } else if (dateTime.isAfter(todayStart)) {
+      // 오늘
       return DateFormat.Hm().format(dateTime);
+    } else {
+      // 그 이전
+      return DateFormat.Md().format(dateTime);
+    }
+  }
+
+  String toSimpleContent(int maxLines) {
+    if (split('\n').length > maxLines) {
+      var newContent = split('\n').sublist(0, maxLines).join('\n');
+      return "$newContent\n⋯";
+    } else {
+      return this;
     }
   }
 }
