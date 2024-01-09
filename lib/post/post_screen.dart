@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:widget_test/common/colors.dart';
 import 'package:widget_test/post/post_data.dart';
 import 'package:widget_test/post/post_list.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -16,40 +21,47 @@ class _PostScreenState extends State<PostScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("게시판"),
-      ),
-      body: PostList(
-        postDatas: [
-          PostData(
-            id: 1,
-            title: '제목1',
-            content: '글내용',
-            view: 1,
-            hit: 1,
-            createdAt: "2024-01-08",
-            updatedAt: "2024-01-08",
-            user: PostUserData(type: "incumbent", id: 1, name: "현직자1"),
-          ),
-          PostData(
-            id: 2,
-            title: '제목2',
-            content: '글내용이 점점점 길어진다면??? 이건 어디서부터 ... 처리를 할지 고민 좀 해봐야할 듯',
-            view: 11,
-            hit: 1,
-            createdAt: "2024-01-08",
-            updatedAt: "2024-01-08",
-            user: PostUserData(type: "incumbent", id: 2, name: "현직자2"),
-          ),
-          PostData(
-            id: 3,
-            title: '제목3',
-            content: '글내용이 점점점 길어진다면??? \n 이건 어디서부터 ... 처리를 할지 고민 좀 해봐야할 듯',
-            view: 10,
-            hit: 1,
-            createdAt: "2024-01-08",
-            updatedAt: "2024-01-09",
-            user: PostUserData(type: "student", id: 3, name: "학생1"),
-          ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: CupertinoButton(child: const Text("글 작성", style: TextStyle(color: CupertinoColors.activeBlue)), onPressed: () {}),
+            // child: ElevatedButton.icon(
+            //   style: const ButtonStyle(
+            //     backgroundColor: MaterialStatePropertyAll(defaultColor),
+            //   ),
+            //   onPressed: () {},`
+            //   icon: const Icon(CupertinoIcons.right_chevron, color: Colors.white),
+            //   label: const Text("글 작성", style: TextStyle(color: Colors.white)),
+            // ),
+          )
         ],
+      ),
+      backgroundColor: Colors.grey.shade100,
+      body: FutureBuilder(
+        future: http.get(
+          Uri.parse(""),
+          headers: {'Content-type': 'application/json; UTF-8'},
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var response = snapshot.data!;
+            var postDatas = <PostData>[];
+            if (response.statusCode == 200) {
+              var body = json.decode(response.body);
+              postDatas = body['data'].map<PostData>((post) => PostData.fromJson(post)).toList();
+            } else {
+              postDatas = [];
+            }
+
+            return PostList(
+              postDatas: postDatas,
+              scrollController: ScrollController(),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
