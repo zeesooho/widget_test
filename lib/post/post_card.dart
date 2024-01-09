@@ -65,9 +65,14 @@ class PostCard extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        child: Visibility(
-                          visible: postData.createdAt != postData.updatedAt,
-                          child: const Text("수정됨", style: TextStyle(fontSize: 12)),
+                        child: Column(
+                          children: [
+                            Text(postData.createdAt.toSimpleTime()),
+                            Visibility(
+                              visible: postData.createdAt != postData.updatedAt,
+                              child: const Text("수정됨", style: TextStyle(fontSize: 12)),
+                            ),
+                          ],
                         ),
                       ),
                       Expanded(
@@ -139,5 +144,13 @@ class ProfileImage extends StatelessWidget {
               backgroundImage: AssetImage("asset/images/default_profile_image.jpg"),
             ),
     );
+  }
+}
+
+extension TimeFormat on String {
+  //이메일 포맷 검증
+  String toSimpleTime() {
+    DateTime dateTime = DateTime.parse(this);
+    return "${dateTime.hour} : ${dateTime.minute}";
   }
 }
