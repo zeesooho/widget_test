@@ -76,3 +76,48 @@ class SignUpForm {
   });
 }
 ```
+
+
+# 게시글 위젯
+
+postData 를 생성자에서 주입
+
+``` dart
+PostCard(postData: widget.postDatas[index], maxLines: 2)
+
+// maxLines와 contentOverFlow는 기본값 있음
+PostCard({
+          required this.postData,
+          this.maxLines = 2,
+          this.contentOverflow = TextOverflow.ellipsis,
+})
+```
+
+예시 이미지
+
+![image](https://github.com/zeesooho/widget_test/assets/25339188/803da356-800d-4c40-ad9d-574cc611af82)
+
+### PostData
+
+PostData는 fromJson으로 api로 요청하여 받아온 body를 바로 넣을 수 있도록 함
+
+```dart
+PostData({
+          required this.id,
+          required this.title,
+          required this.content,
+          required this.view,
+          required this.hit,
+          required this.createdAt,
+          required this.updatedAt,
+          required this.user,
+});
+
+PostUserData({
+          required this.type,
+          required this.id,
+          required this.name,
+          this.image,
+          this.additionalInfo,
+});
+```
