@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +69,7 @@ class PostCard extends StatelessWidget {
                       Expanded(
                         child: Column(
                           children: [
-                            Text(postData.createdAt.toSimpleTime()),
+                            Text(postData.createdAt.toSimpleTime(context)),
                             Visibility(
                               visible: postData.createdAt != postData.updatedAt,
                               child: const Text("수정됨", style: TextStyle(fontSize: 12)),
@@ -149,8 +151,16 @@ class ProfileImage extends StatelessWidget {
 
 extension TimeFormat on String {
   //이메일 포맷 검증
-  String toSimpleTime() {
-    DateTime dateTime = DateTime.parse(this);
-    return "${dateTime.hour} : ${dateTime.minute}";
+  String toSimpleTime(context) {
+    DateTime now = DateTime.now().toLocal();
+    DateTime todayStart = DateTime(now.year, now.month, now.day);
+
+    DateTime dateTime = DateTime.parse(this).toLocal();
+
+    if (dateTime.isBefore(todayStart)) {
+      return DateFormat.Md().format(dateTime);
+    } else {
+      return DateFormat.Hm().format(dateTime);
+    }
   }
 }
