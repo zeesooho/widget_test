@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:widget_test/post/post_screen.dart';
+import 'package:widget_test/home/home_screen.dart';
 import 'package:widget_test/login/login_screen.dart';
 import 'package:widget_test/login/signup_screen.dart';
 
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DongAJul Widget Test',
-      home: SignUpScreen(),
+      home: PostScreen(),
     );
   }
 }
