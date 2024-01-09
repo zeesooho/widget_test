@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:widget_test/post/post_data.dart';
@@ -8,51 +8,98 @@ class PostCard extends StatelessWidget {
   final int contentMaxLines;
   final TextOverflow contentOverflow;
 
-  const PostCard({
+  PostCard({
     Key? key,
     required this.postData,
-    this.contentMaxLines = 2,
+    this.contentMaxLines = 3,
     this.contentOverflow = TextOverflow.ellipsis,
   }) : super(key: key);
+
+  final Container _incumbentTag = Container(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      color: Colors.blue,
+    ),
+    child: const Padding(
+      padding: EdgeInsets.all(4),
+      child: Text('현직자'),
+    ),
+  );
+
+  final Container _studentTag = Container(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      color: Colors.amber,
+    ),
+    child: const Padding(
+      padding: EdgeInsets.all(4),
+      child: Text('학생'),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraint) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             color: Colors.white,
-            // height: MediaQuery.of(context).size.height / 7,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: postData.user.image != null
-                            ? NetworkImage(postData.user.image!)
-                            : const NetworkImage("https://robohash.org/hicveldicta.png?size=50x50&set=set1"),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 14.0),
+                        child: postData.user.image != null
+                            ? CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(postData.user.image!),
+                              )
+                            : const CircleAvatar(
+                                radius: 30,
+                                backgroundImage: AssetImage("asset/images/cheetah.jpg"),
+                              ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(postData.user.name),
-                          postData.user.type == 'incumbent' ? const Text('현직자') : const Text('학생'),
-                        ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(postData.user.name),
+                            postData.user.type == 'incumbent' ? _incumbentTag : _studentTag,
+                          ],
+                        ),
                       ),
-                      Visibility(
-                        visible: postData.createdAt != postData.updatedAt,
-                        child: const Text("수정됨", style: TextStyle(fontSize: 12)),
+                      Expanded(
+                        child: Visibility(
+                          visible: postData.createdAt != postData.updatedAt,
+                          child: const Text("수정됨", style: TextStyle(fontSize: 12)),
+                        ),
                       ),
-                      Text("hit: ${postData.hit}"),
-                      Text("view: ${postData.view}")
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(CupertinoIcons.eye),
+                            Text("  ${postData.hit}"),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(CupertinoIcons.hand_thumbsup),
+                            Text(" ${postData.hit}"),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
+                  const Divider(),
                   SizedBox(
                     width: double.infinity,
                     child: Column(
@@ -60,6 +107,7 @@ class PostCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(postData.title),
+                        const Divider(),
                         Text(
                           postData.content,
                           maxLines: contentMaxLines,
@@ -72,7 +120,7 @@ class PostCard extends StatelessWidget {
               ),
             ),
           ),
-          Container(width: double.infinity, height: 1, color: Colors.grey),
+          const Divider(height: 1, color: Colors.grey),
         ],
       ),
     );
