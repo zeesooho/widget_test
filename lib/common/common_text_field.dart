@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:widget_test/common/colors.dart';
 
 import 'helper_style.dart';
 
@@ -103,8 +104,8 @@ InputDecoration commonDecoration(CommonTextField widget, Widget suffixIcon) {
     helperStyle: widget.helperStyle?.style,
     // enabledBorder: getInputBorder(CupertinoColors.activeBlue),
     // focusedBorder: getInputBorder(CupertinoColors.activeBlue, bold: true),
-    enabledBorder: getInputBorder(const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56)),
-    focusedBorder: getInputBorder(const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56), bold: true),
+    enabledBorder: getInputBorder(defaultColor),
+    focusedBorder: getInputBorder(defaultColor, bold: true),
     errorBorder: getInputBorder(CupertinoColors.systemRed),
     fillColor: CupertinoColors.white,
     filled: true,

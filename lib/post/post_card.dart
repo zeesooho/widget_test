@@ -52,19 +52,9 @@ class PostCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 14.0),
-                        child: postData.user.image != null
-                            ? CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(postData.user.image!),
-                              )
-                            : const CircleAvatar(
-                                radius: 30,
-                                backgroundImage: AssetImage("asset/images/cheetah.jpg"),
-                              ),
-                      ),
+                      ProfileImage(uri: postData.user.image),
                       Expanded(
+                        flex: 2,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,6 +113,31 @@ class PostCard extends StatelessWidget {
           const Divider(height: 1, color: Colors.grey),
         ],
       ),
+    );
+  }
+}
+
+class ProfileImage extends StatelessWidget {
+  final String? uri;
+
+  const ProfileImage({
+    super.key,
+    this.uri,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 14.0),
+      child: uri != null
+          ? CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(uri!),
+            )
+          : const CircleAvatar(
+              radius: 30,
+              backgroundImage: AssetImage("asset/images/default_profile_image.jpg"),
+            ),
     );
   }
 }
