@@ -7,15 +7,15 @@ import 'package:widget_test/post/post_data.dart';
 
 class PostCard extends StatelessWidget {
   final PostData postData;
-  final int contentMaxLines;
+  final int maxLines;
   final TextOverflow contentOverflow;
 
   PostCard({
-    Key? key,
+    super.key,
     required this.postData,
-    this.contentMaxLines = 1,
+    this.maxLines = 2,
     this.contentOverflow = TextOverflow.ellipsis,
-  }) : super(key: key);
+  });
 
   final Container _incumbentTag = Container(
     decoration: const BoxDecoration(
@@ -55,74 +55,96 @@ class PostCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ProfileImage(radius: 25, uri: postData.user.image),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            postData.user.type == 'incumbent'
-                                ? _incumbentTag
-                                : _studentTag,
-                            Text(postData.user.name),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(postData.createdAt.toSimpleTime()),
-                      ),
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(CupertinoIcons.eye),
-                            Text("  ${postData.hit}"),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(CupertinoIcons.heart),
-                            Text(" ${postData.hit}"),
-                          ],
-                        ),
-                      ),
+                      nameArea(),
+                      dateArea(),
+                      viewArea(filled: false),
+                      hitArea(filled: false),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          postData.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          postData.content.toSimpleContent(contentMaxLines),
-                          style: TextStyle(
-                            overflow: contentOverflow,
-                            fontSize: 14,
-                            height: 1.7,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  contentArea(),
                 ],
               ),
             ),
           ),
           const Divider(height: 1, color: Colors.grey),
+        ],
+      ),
+    );
+  }
+
+  Widget hitArea({bool filled = false, Color? color}) {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          filled
+              ? Icon(CupertinoIcons.heart_fill, color: color)
+              : Icon(CupertinoIcons.heart, color: color),
+          Text(" ${postData.hit}"),
+        ],
+      ),
+    );
+  }
+
+  Widget viewArea({bool filled = false, Color? color}) {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          filled
+              ? Icon(CupertinoIcons.eye_fill, color: color)
+              : Icon(CupertinoIcons.eye, color: color),
+          Text("  ${postData.hit}"),
+        ],
+      ),
+    );
+  }
+
+  Widget dateArea() {
+    return Expanded(
+      flex: 2,
+      child: Text(postData.createdAt.toSimpleTime()),
+    );
+  }
+
+  Widget nameArea() {
+    return Expanded(
+      flex: 3,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          postData.user.type == 'incumbent' ? _incumbentTag : _studentTag,
+          Text(postData.user.name),
+        ],
+      ),
+    );
+  }
+
+  Widget contentArea() {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            postData.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            postData.content.toSimpleContent(maxLines),
+            style: TextStyle(
+              overflow: contentOverflow,
+              fontSize: 14,
+              height: 1.7,
+            ),
+          ),
         ],
       ),
     );
@@ -186,7 +208,7 @@ extension PostCardFormat on String {
   String toSimpleContent(int maxLines) {
     if (split('\n').length > maxLines) {
       var newContent = split('\n').sublist(0, maxLines).join('\n');
-      return "$newContent\n⋯";
+      return "$newContent…";
     } else {
       return this;
     }
