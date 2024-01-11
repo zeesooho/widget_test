@@ -78,9 +78,7 @@ class PostCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          filled
-              ? Icon(CupertinoIcons.heart_fill, color: color)
-              : Icon(CupertinoIcons.heart, color: color),
+          filled ? Icon(CupertinoIcons.heart_fill, color: color) : Icon(CupertinoIcons.heart, color: color),
           Text(" ${postData.hit}"),
         ],
       ),
@@ -92,9 +90,7 @@ class PostCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          filled
-              ? Icon(CupertinoIcons.eye_fill, color: color)
-              : Icon(CupertinoIcons.eye, color: color),
+          filled ? Icon(CupertinoIcons.eye_fill, color: color) : Icon(CupertinoIcons.eye, color: color),
           Text("  ${postData.hit}"),
         ],
       ),
@@ -172,8 +168,7 @@ class ProfileImage extends StatelessWidget {
             )
           : CircleAvatar(
               radius: radius,
-              backgroundImage:
-                  const AssetImage("asset/images/default_profile_image.jpg"),
+              backgroundImage: const AssetImage("asset/images/default_profile_image.jpg"),
             ),
     );
   }
@@ -183,17 +178,14 @@ extension PostCardFormat on String {
   //이메일 포맷 검증
   String toSimpleTime() {
     DateTime now = DateTime.now().toLocal();
-    DateTime beforeHour =
-        DateTime.now().toLocal().subtract(const Duration(hours: 1));
+    DateTime beforeHour = DateTime.now().toLocal().subtract(const Duration(hours: 1));
     DateTime todayStart = DateTime(now.year, now.month, now.day);
 
     DateTime dateTime = DateTime.parse(this).toLocal();
 
     if (dateTime.isAfter(beforeHour)) {
       // 1시간 이내
-      var gapMinute =
-          (now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch) /
-              60000;
+      var gapMinute = (now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch) / 60000;
       if (gapMinute < 2) return "방금전";
       return "${gapMinute.toInt()}분 전";
     } else if (dateTime.isAfter(todayStart)) {
