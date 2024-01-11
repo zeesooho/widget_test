@@ -13,7 +13,7 @@ class PostCard extends StatelessWidget {
   PostCard({
     super.key,
     required this.postData,
-    this.maxLines = 2,
+    this.maxLines = 1,
     this.contentOverflow = TextOverflow.ellipsis,
   });
 
@@ -133,7 +133,7 @@ class PostCard extends StatelessWidget {
             postData.title,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: 16,
             ),
           ),
           const SizedBox(height: 6),
