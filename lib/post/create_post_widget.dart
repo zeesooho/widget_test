@@ -55,27 +55,36 @@ class CreatePostWidgetState extends State<CreatePostWidget> {
     });
   }
 
-  bool get titleValidate =>
-      _titleController.text.length >= 2 && _titleController.text.length <= 50;
+  bool get titleValidate => _titleController.text.length >= 2 && _titleController.text.length <= 50;
   bool get contentValidate => _contentController.text.length > 3;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(controller: _titleController),
-        TextField(
-          controller: _contentController,
-          maxLines: 10,
-          style: const TextStyle(height: 2),
+    return LayoutBuilder(builder: (context, constraint) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(border: InputBorder.none, hintText: "제목을 입력하세요"),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Container(height: 1, width: constraint.maxWidth, color: Colors.grey.shade400),
+            TextField(
+              controller: _contentController,
+              maxLines: 50,
+              decoration: const InputDecoration(border: InputBorder.none, hintText: "내용을 입력하세요"),
+              style: const TextStyle(height: 2, fontSize: 16),
+            ),
+          ],
         ),
-      ],
-    );
+      );
+    });
   }
 
   void onCreatePost() async {
-    var response = await widget.onCreatePost(
-        _titleController.text, _contentController.text);
+    var response = await widget.onCreatePost(_titleController.text, _contentController.text);
   }
 
   @override
