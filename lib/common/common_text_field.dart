@@ -102,8 +102,6 @@ InputDecoration commonDecoration(CommonTextField widget, Widget suffixIcon) {
     labelText: widget.labelText,
     helperText: widget.helperText,
     helperStyle: widget.helperStyle?.style,
-    // enabledBorder: getInputBorder(CupertinoColors.activeBlue),
-    // focusedBorder: getInputBorder(CupertinoColors.activeBlue, bold: true),
     enabledBorder: getInputBorder(defaultColor),
     focusedBorder: getInputBorder(defaultColor, bold: true),
     errorBorder: getInputBorder(CupertinoColors.systemRed),
@@ -118,4 +116,5 @@ OutlineInputBorder getInputBorder(Color color, {bool bold = false}) => OutlineIn
         color: color,
         width: bold ? 2 : 1,
       ),
+      borderRadius: BorderRadius.circular(8),
     );

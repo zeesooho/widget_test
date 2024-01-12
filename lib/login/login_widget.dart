@@ -152,7 +152,7 @@ class SignInButton extends StatelessWidget {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(18),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             backgroundColor: const Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
           ),
           child: const Text(
@@ -183,7 +183,7 @@ class SignUpButton extends StatelessWidget {
           onPressed: onPressed,
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.all(18),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: const BorderSide(
               color: Color.fromARGB(0xFF, 0xE9, 0xCE, 0xB7),
             ),
