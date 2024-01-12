@@ -58,36 +58,51 @@ class CreatePostWidgetState extends State<CreatePostWidget> {
   }
 
   bool get titleValidate => _titleController.text.length >= 2 && _titleController.text.length <= 50;
-  bool get contentValidate => _contentController.text.length > 3;
+  bool get contentValidate => _contentController.text.length >= 3;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: LayoutBuilder(
-        builder: (context, constraint) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(border: InputBorder.none, hintText: "제목을 입력하세요"),
-                  textInputAction: TextInputAction.next,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Container(height: 1, width: constraint.maxWidth, color: Colors.grey.shade400),
-                TextField(
-                  controller: _contentController,
-                  maxLines: 50,
-                  decoration: const InputDecoration(border: InputBorder.none, hintText: "내용을 입력하세요"),
-                  textInputAction: TextInputAction.done,
-                  style: const TextStyle(height: 2, fontSize: 16),
-                ),
-              ],
+    return LayoutBuilder(
+      builder: (context, constraint) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Container(
+            decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(border: InputBorder.none, hintText: "제목을 입력하세요"),
+                    textInputAction: TextInputAction.next,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Container(height: 1, width: constraint.maxWidth, color: Colors.grey.shade400),
+                  Flexible(
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: _contentController,
+                              decoration: const InputDecoration(border: InputBorder.none, hintText: "내용을 입력하세요"),
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              style: const TextStyle(height: 2, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
