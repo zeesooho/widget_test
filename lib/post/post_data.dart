@@ -3,7 +3,8 @@ class PostData {
   final String title;
   final String content;
   final int view;
-  final int hit;
+  final int recommend;
+  final String? category;
   final String createdAt;
   final String updatedAt;
   final PostUserData user;
@@ -13,7 +14,8 @@ class PostData {
     required this.title,
     required this.content,
     required this.view,
-    required this.hit,
+    required this.recommend,
+    this.category,
     required this.createdAt,
     required this.updatedAt,
     required this.user,
@@ -24,7 +26,8 @@ class PostData {
         title: json['title'],
         content: json['content'],
         view: json['view'],
-        hit: json['hit'],
+        recommend: json['recommend'],
+        category: json['category'],
         createdAt: json['createdAt'],
         updatedAt: json['updatedAt'],
         user: PostUserData.fromJson(json['user']),
