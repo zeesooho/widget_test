@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:widget_test/post/post_data.dart';
 
 class PostCard extends StatelessWidget {
-  final PostData postData;
+  final PostCardData postCardData;
   final int maxLines;
   final TextOverflow contentOverflow;
   final Function(int id, String? category)? onTap;
 
   PostCard({
     super.key,
-    required this.postData,
+    required this.postCardData,
     this.maxLines = 1,
     this.contentOverflow = TextOverflow.ellipsis,
     this.onTap,
@@ -52,7 +52,7 @@ class PostCard extends StatelessWidget {
             color: Colors.white,
             child: InkWell(
               onTap: () {
-                if (onTap != null) onTap!(postData.id, postData.category);
+                if (onTap != null) onTap!(postCardData.id, postCardData.category);
               },
               child: Padding(
                 padding: const EdgeInsets.all(12),
@@ -61,7 +61,7 @@ class PostCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ProfileImage(radius: 25, uri: postData.user.image),
+                        ProfileImage(radius: 25, uri: postCardData.user.image),
                         nameArea(),
                         dateArea(),
                         viewArea(filled: false),
@@ -87,7 +87,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           filled ? Icon(CupertinoIcons.heart_fill, color: color) : Icon(CupertinoIcons.heart, color: color),
-          Text(" ${postData.recommend}"),
+          Text(" ${postCardData.recommend}"),
         ],
       ),
     );
@@ -99,7 +99,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           filled ? Icon(CupertinoIcons.eye_fill, color: color) : Icon(CupertinoIcons.eye, color: color),
-          Text("  ${postData.recommend}"),
+          Text("  ${postCardData.recommend}"),
         ],
       ),
     );
@@ -108,7 +108,7 @@ class PostCard extends StatelessWidget {
   Widget dateArea() {
     return Expanded(
       flex: 2,
-      child: Text(postData.createdAt.toSimpleTime()),
+      child: Text(postCardData.createdAt.toSimpleTime()),
     );
   }
 
@@ -119,8 +119,8 @@ class PostCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          postData.user.type == 'incumbent' ? _incumbentTag : _studentTag,
-          Text(postData.user.name),
+          postCardData.user.type == 'incumbent' ? _incumbentTag : _studentTag,
+          Text(postCardData.user.name),
         ],
       ),
     );
@@ -134,7 +134,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            postData.title,
+            postCardData.title,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -142,7 +142,7 @@ class PostCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            postData.content.toSimpleContent(maxLines),
+            postCardData.content.toSimpleContent(maxLines),
             style: TextStyle(
               overflow: contentOverflow,
               fontSize: 14,
