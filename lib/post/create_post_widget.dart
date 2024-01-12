@@ -18,6 +18,7 @@ class CreatePostWidget extends StatefulWidget {
         builder: (context, snapshot) {
           if (snapshot.data != null && snapshot.data!) {
             return CupertinoButton(
+                padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
                 onPressed: () => createPostWidgetState.onCreatePost(),
                 child: const Text(
                   "작성 완료",
@@ -25,6 +26,7 @@ class CreatePostWidget extends StatefulWidget {
                 ));
           }
           return const CupertinoButton(
+              padding: EdgeInsets.only(top: 8, left: 8, bottom: 8),
               onPressed: null,
               child: Text(
                 "작성 완료",
