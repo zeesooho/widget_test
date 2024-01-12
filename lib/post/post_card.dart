@@ -1,3 +1,4 @@
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -9,12 +10,14 @@ class PostCard extends StatelessWidget {
   final PostData postData;
   final int maxLines;
   final TextOverflow contentOverflow;
+  final Function(int id, String? category)? onTap;
 
   PostCard({
     super.key,
     required this.postData,
     this.maxLines = 1,
     this.contentOverflow = TextOverflow.ellipsis,
+    this.onTap,
   });
 
   final Container _incumbentTag = Container(
@@ -45,29 +48,34 @@ class PostCard extends StatelessWidget {
       builder: (context, constraint) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
+          Ink(
             color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ProfileImage(radius: 25, uri: postData.user.image),
-                      nameArea(),
-                      dateArea(),
-                      viewArea(filled: false),
-                      hitArea(filled: false),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  contentArea(),
-                ],
+            child: InkWell(
+              onTap: () {
+                if (onTap != null) onTap!(postData.id, postData.category);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ProfileImage(radius: 25, uri: postData.user.image),
+                        nameArea(),
+                        dateArea(),
+                        viewArea(filled: false),
+                        hitArea(filled: false),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    contentArea(),
+                  ],
+                ),
               ),
             ),
           ),
-          const Divider(height: 1, color: Colors.grey),
+          Divider(height: 1, color: Colors.grey.shade300),
         ],
       ),
     );
@@ -79,7 +87,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           filled ? Icon(CupertinoIcons.heart_fill, color: color) : Icon(CupertinoIcons.heart, color: color),
-          Text(" ${postData.hit}"),
+          Text(" ${postData.recommend}"),
         ],
       ),
     );
@@ -91,7 +99,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           filled ? Icon(CupertinoIcons.eye_fill, color: color) : Icon(CupertinoIcons.eye, color: color),
-          Text("  ${postData.hit}"),
+          Text("  ${postData.recommend}"),
         ],
       ),
     );

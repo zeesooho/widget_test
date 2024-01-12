@@ -7,11 +7,13 @@ import 'package:widget_test/post/post_data.dart';
 class PostList extends StatefulWidget {
   final List<PostData> postDatas;
   final ScrollController scrollController;
+  final Function(int id, String? category)? onTap;
 
   const PostList({
     super.key,
     required this.postDatas,
     required this.scrollController,
+    this.onTap,
   });
 
   @override
@@ -28,13 +30,16 @@ class _PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       controller: widget.scrollController,
       physics: const BouncingScrollPhysics(),
       itemCount: widget.postDatas.length,
       itemBuilder: (context, index) {
         return PostCard(
           postData: widget.postDatas[index],
+          onTap: (id, category) {
+            if (widget.onTap != null) widget.onTap!(id, category);
+          },
         );
       },
     );
