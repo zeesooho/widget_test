@@ -30,14 +30,16 @@ class SignUpWidget extends StatefulWidget {
         stream: vaildStreamController.stream,
         builder: (context, snapshot) {
           if (snapshot.data != null && snapshot.data!) {
-            return IconButton(
-              icon: const Icon(Icons.done, color: CupertinoColors.activeBlue),
+            return CupertinoButton(
+              padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
               onPressed: () => signUpWidgetState.signUp(),
+              child: const Text("가입 완료", style: TextStyle(color: CupertinoColors.activeBlue)),
             );
           }
-          return const IconButton(
-            icon: Icon(Icons.done),
+          return const CupertinoButton(
+            padding: EdgeInsets.only(top: 8, left: 8, bottom: 8),
             onPressed: null,
+            child: Text("가입 완료"),
           );
         });
   }
@@ -151,24 +153,39 @@ class SignUpWidgetState extends State<SignUpWidget> {
                   Flexible(
                     child: ScrollConfiguration(
                       behavior: WebScrollBehavior(),
-                      child: CupertinoPicker.builder(
-                        itemExtent: 48,
-                        childCount: 54,
-                        onSelectedItemChanged: (index) => setState(() {
-                          age = index + 17;
-                          ageValidate(age);
-                        }),
-                        itemBuilder: (context, index) {
-                          if (index == 0) return const Center(child: Text("나이 선택"));
-                          return Center(child: Text("${index + 17}"));
-                        },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56)),
+                            borderRadius: const BorderRadius.all(Radius.circular(4)),
+                            color: Colors.white),
+                        child: CupertinoPicker.builder(
+                          itemExtent: MediaQuery.of(context).size.height / 18,
+                          childCount: 54,
+                          selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                            background: Colors.transparent,
+                          ),
+                          onSelectedItemChanged: (index) => setState(() {
+                            age = index + 17;
+                            ageValidate(age);
+                          }),
+                          itemBuilder: (context, index) {
+                            Widget child;
+                            if (index == 0) {
+                              child = const Text("나이 선택", style: TextStyle(color: Colors.black));
+                            } else {
+                              child = Text("${index + 17}", style: const TextStyle(color: Colors.black));
+                            }
+                            return Center(child: child);
+                          },
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: LayoutBuilder(
                       builder: (context, constraint) => ToggleButtons(
-                        constraints: BoxConstraints.expand(width: constraint.maxWidth / 2 - 4),
+                        constraints: BoxConstraints.expand(height: MediaQuery.of(context).size.height / 18, width: constraint.maxWidth / 2 - 4),
                         isSelected: isSelected2,
                         disabledColor: Colors.grey,
                         selectedColor: Colors.white,
