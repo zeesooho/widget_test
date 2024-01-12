@@ -156,7 +156,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(color: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56)),
-                            borderRadius: const BorderRadius.all(Radius.circular(4)),
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
                             color: Colors.white),
                         child: CupertinoPicker.builder(
                           itemExtent: MediaQuery.of(context).size.height / 18,
