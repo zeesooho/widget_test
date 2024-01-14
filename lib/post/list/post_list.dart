@@ -1,8 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
-import 'package:widget_test/post/post_card.dart';
-import 'package:widget_test/post/post_data.dart';
+import 'package:widget_test/post/list/post_card.dart';
 
 class PostList extends StatefulWidget {
   final List<PostCardData> postDatas;

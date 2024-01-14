@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CreatePostWidget extends StatefulWidget {
-  final String? title;
-  final String? content;
+import 'create_post_data.dart';
+export 'create_post_data.dart';
 
+class CreatePostWidget extends StatefulWidget {
   final CreatePostWidgetState createPostWidgetState = CreatePostWidgetState();
   final StreamController<bool> vaildStreamController = StreamController();
   final Future<bool> Function(String title, String content) onCreatePost;
   late final Widget action;
 
+  final CreatePostData? data;
+
   CreatePostWidget({
     super.key,
+    this.data,
     required this.onCreatePost,
-    this.title,
-    this.content,
   }) {
     action = StreamBuilder<bool>(
         stream: vaildStreamController.stream,
@@ -26,7 +27,7 @@ class CreatePostWidget extends StatefulWidget {
                 padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
                 onPressed: () => createPostWidgetState.onCreatePost(),
                 child: Text(
-                  title == null ? "작성 완료" : "수정 완료",
+                  data == null ? "작성 완료" : "수정 완료",
                   style: const TextStyle(color: CupertinoColors.activeBlue),
                 ));
           }
@@ -34,7 +35,7 @@ class CreatePostWidget extends StatefulWidget {
               padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
               onPressed: null,
               child: Text(
-                title == null ? "작성 완료" : "수정 완료",
+                data == null ? "작성 완료" : "수정 완료",
               ));
         });
   }
@@ -53,8 +54,8 @@ class CreatePostWidgetState extends State<CreatePostWidget> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.title ?? "";
-    _contentController.text = widget.content ?? "";
+    _titleController.text = widget.data?.title ?? "";
+    _contentController.text = widget.data?.content ?? "";
 
     _titleController.addListener(() {
       widget.vaildStreamController.add((titleValidate && contentValidate));
@@ -79,37 +80,45 @@ class CreatePostWidgetState extends State<CreatePostWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 children: [
-                  TextField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(border: InputBorder.none, hintText: "제목을 입력하세요"),
-                    textInputAction: TextInputAction.next,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  titleWidget(),
                   Container(height: 1, width: constraint.maxWidth, color: Colors.grey.shade400),
-                  Flexible(
-                    child: ScrollConfiguration(
-                      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: _contentController,
-                              decoration: const InputDecoration(border: InputBorder.none, hintText: "내용을 입력하세요"),
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                              style: const TextStyle(height: 2, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  contentWIdget(context),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget titleWidget() {
+    return TextField(
+      controller: _titleController,
+      decoration: const InputDecoration(border: InputBorder.none, hintText: "제목을 입력하세요"),
+      textInputAction: TextInputAction.next,
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget contentWIdget(BuildContext context) {
+    return Flexible(
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: _contentController,
+                decoration: const InputDecoration(border: InputBorder.none, hintText: "내용을 입력하세요"),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                style: const TextStyle(height: 1.8, fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

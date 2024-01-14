@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:widget_test/post/post_data.dart';
+import 'package:widget_test/post/detail/post_string_format.dart';
+import 'package:widget_test/profile/profile_image.dart';
 
-import 'post_string_format.dart';
+import './post_card_data.dart';
+export 'post_card_data.dart';
 
 class PostCard extends StatelessWidget {
   final PostCardData postCardData;
@@ -18,28 +20,6 @@ class PostCard extends StatelessWidget {
     this.contentOverflow = TextOverflow.ellipsis,
     this.onTap,
   });
-
-  final Container _incumbentTag = Container(
-    decoration: const BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      color: Colors.blue,
-    ),
-    child: const Padding(
-      padding: EdgeInsets.all(4),
-      child: Text('현직자'),
-    ),
-  );
-
-  final Container _studentTag = Container(
-    decoration: const BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      color: Colors.amber,
-    ),
-    child: const Padding(
-      padding: EdgeInsets.all(4),
-      child: Text('학생'),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +41,14 @@ class PostCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ProfileImage(radius: 25, uri: postCardData.user.image),
-                        nameArea(),
-                        dateArea(),
-                        viewArea(filled: false),
-                        recommendArea(filled: false),
+                        nameWidget(),
+                        dateWidget(),
+                        viewWidget(filled: false),
+                        recommendWidget(filled: false),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    contentArea(),
+                    contentWidget(),
                   ],
                 ),
               ),
@@ -80,7 +60,7 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget recommendArea({bool filled = false, Color? color}) {
+  Widget recommendWidget({bool filled = false, Color? color}) {
     return Expanded(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,7 +72,7 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget viewArea({bool filled = false, Color? color}) {
+  Widget viewWidget({bool filled = false, Color? color}) {
     return Expanded(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,14 +84,14 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget dateArea() {
+  Widget dateWidget() {
     return Expanded(
       flex: 2,
       child: Text(postCardData.createdDate.toSimpleTime()),
     );
   }
 
-  Widget nameArea() {
+  Widget nameWidget() {
     return Expanded(
       flex: 3,
       child: Column(
@@ -125,7 +105,7 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget contentArea() {
+  Widget contentWidget() {
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -152,31 +132,26 @@ class PostCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class ProfileImage extends StatelessWidget {
-  final String? uri;
-  final double radius;
+  final Widget _incumbentTag = Container(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      color: Colors.blue,
+    ),
+    child: const Padding(
+      padding: EdgeInsets.all(4),
+      child: Text('현직자'),
+    ),
+  );
 
-  const ProfileImage({
-    super.key,
-    this.uri,
-    this.radius = 30,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 14.0),
-      child: uri != null
-          ? CircleAvatar(
-              radius: radius,
-              backgroundImage: NetworkImage(uri!),
-            )
-          : CircleAvatar(
-              radius: radius,
-              backgroundImage: const AssetImage("asset/images/default_profile_image.jpg"),
-            ),
-    );
-  }
+  final Widget _studentTag = Container(
+    decoration: const BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      color: Colors.amber,
+    ),
+    child: const Padding(
+      padding: EdgeInsets.all(4),
+      child: Text('학생'),
+    ),
+  );
 }

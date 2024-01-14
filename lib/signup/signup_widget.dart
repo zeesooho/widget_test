@@ -7,15 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:widget_test/common/common_text_field.dart';
 import 'package:widget_test/common/helper_style.dart';
 import 'package:widget_test/common/input_validation.dart';
-import 'package:widget_test/login/singup_form.dart';
-
-import 'id_pw_field.dart';
+import 'package:widget_test/login/id_pw_field.dart';
+import 'package:widget_test/signup/singup_dat.dart';
 
 class SignUpWidget extends StatefulWidget {
   final SignUpWidgetState signUpWidgetState = SignUpWidgetState();
   final String id;
   final String pw;
-  final Future<bool> Function(SignUpForm signUpForm) onSignUp;
+  final Future<bool> Function(SignUpData signUpData) onSignUp;
   final StreamController<bool> vaildStreamController = StreamController();
 
   late final Widget action;
@@ -225,7 +224,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
   // 회원가입 버튼 눌렀을 시
   void signUp() async {
     // form 검증 로직
-    var response = await widget.onSignUp(SignUpForm(
+    var response = await widget.onSignUp(SignUpData(
       email: _idController.text,
       password: _pwController.text,
       name: _nameController.text,
@@ -317,11 +316,9 @@ class SignUpWidgetState extends State<SignUpWidget> {
 }
 
 class WebScrollBehavior extends MaterialScrollBehavior {
-  // Override behavior methods and getters like dragDevices
   @override
   Set<PointerDeviceKind> get dragDevices => {
         PointerDeviceKind.touch,
         PointerDeviceKind.mouse,
-        // etc.
       };
 }

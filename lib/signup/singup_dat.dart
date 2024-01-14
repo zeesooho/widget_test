@@ -1,11 +1,11 @@
-class SignUpForm {
+class SignUpData {
   final String email;
   final String password;
   final String name;
   final int age;
   final bool gender;
 
-  SignUpForm({
+  SignUpData({
     required this.email,
     required this.password,
     required this.name,

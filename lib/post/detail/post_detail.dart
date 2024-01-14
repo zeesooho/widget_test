@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:widget_test/post/post_data.dart';
-import 'package:widget_test/post/post_string_format.dart';
+import 'post_detail_data.dart';
+import 'post_string_format.dart';
+
+export 'post_detail_data.dart';
 
 class PostDetail extends StatefulWidget {
   final PostDetailData postDetailData;
-  final Map<String, Function> actions;
+  final Map<String, Function> menuItems;
   final Future<PostDetailData> Function() onRecommend;
 
   const PostDetail({
     super.key,
     required this.postDetailData,
-    required this.actions,
+    required this.menuItems,
     required this.onRecommend,
   });
 
@@ -35,30 +37,64 @@ class _PostDetailState extends State<PostDetail> {
       appBar: AppBar(title: const Text("게시글 상세보기"), centerTitle: true, actions: [
         PopupMenuButton(
           onSelected: (name) {
-            widget.actions[name]!();
+            widget.menuItems[name]!();
           },
           itemBuilder: (context) {
-            return widget.actions.keys.map((e) => PopupMenuItem<String>(value: e, child: Text(e))).toList();
+            return widget.menuItems.keys.map((e) => PopupMenuItem<String>(value: e, child: Text(e))).toList();
           },
         ),
       ]),
-      body: Center(
-        child: Column(
-          children: [
-            Text('id: ${_postDetailData.id}'),
-            Text('studentId: ${_postDetailData.studentId}'),
-            Text('incumbentId ${_postDetailData.incumbentId}'),
-            Text('categoryId ${_postDetailData.categoryId}'),
-            Text('reported ${_postDetailData.reported}'),
-            Text("title ${_postDetailData.title}"),
-            Text("content ${_postDetailData.content}"),
-            Text(_postDetailData.isMine ? "내꺼" : "남꺼"),
-            viewArea(),
-            recommendArea(filled: _postDetailData.isRecommend, color: CupertinoColors.activeBlue),
-            Text('create ${_postDetailData.createdDate.toSimpleTime()}'),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              titleWidget(),
+              const SizedBox(height: 8),
+              contentWidget(),
+              Row(
+                children: [
+                  viewArea(),
+                  recommendArea(filled: _postDetailData.isRecommend, color: CupertinoColors.activeBlue),
+                ],
+              ),
+              const Divider(),
+              const Expanded(
+                child: Text("댓글 영역"),
+              )
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget contentWidget() {
+    return SizedBox(
+      width: double.infinity,
+      child: Text(
+        _postDetailData.content,
+        textAlign: TextAlign.left,
+        style: const TextStyle(
+          fontSize: 16,
+          height: 1.8,
+        ),
+      ),
+    );
+  }
+
+  Widget titleWidget() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          _postDetailData.title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 8),
+        Center(child: Text(_postDetailData.createdDate.toSimpleTime())),
+      ],
     );
   }
 
