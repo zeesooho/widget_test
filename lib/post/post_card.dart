@@ -1,10 +1,9 @@
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:widget_test/post/post_data.dart';
+
+import 'post_string_format.dart';
 
 class PostCard extends StatelessWidget {
   final PostCardData postCardData;
@@ -65,7 +64,7 @@ class PostCard extends StatelessWidget {
                         nameArea(),
                         dateArea(),
                         viewArea(filled: false),
-                        hitArea(filled: false),
+                        recommendArea(filled: false),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -81,7 +80,7 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget hitArea({bool filled = false, Color? color}) {
+  Widget recommendArea({bool filled = false, Color? color}) {
     return Expanded(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,7 +98,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           filled ? Icon(CupertinoIcons.eye_fill, color: color) : Icon(CupertinoIcons.eye, color: color),
-          Text("  ${postCardData.recommend}"),
+          Text("  ${postCardData.view}"),
         ],
       ),
     );
@@ -108,7 +107,7 @@ class PostCard extends StatelessWidget {
   Widget dateArea() {
     return Expanded(
       flex: 2,
-      child: Text(postCardData.createdAt.toSimpleTime()),
+      child: Text(postCardData.createdDate.toSimpleTime()),
     );
   }
 
@@ -179,38 +178,5 @@ class ProfileImage extends StatelessWidget {
               backgroundImage: const AssetImage("asset/images/default_profile_image.jpg"),
             ),
     );
-  }
-}
-
-extension PostCardFormat on String {
-  //이메일 포맷 검증
-  String toSimpleTime() {
-    DateTime now = DateTime.now().toLocal();
-    DateTime beforeHour = DateTime.now().toLocal().subtract(const Duration(hours: 1));
-    DateTime todayStart = DateTime(now.year, now.month, now.day);
-
-    DateTime dateTime = DateTime.parse(this).toLocal();
-
-    if (dateTime.isAfter(beforeHour)) {
-      // 1시간 이내
-      var gapMinute = (now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch) / 60000;
-      if (gapMinute < 2) return "방금전";
-      return "${gapMinute.toInt()}분 전";
-    } else if (dateTime.isAfter(todayStart)) {
-      // 오늘
-      return DateFormat.Hm().format(dateTime);
-    } else {
-      // 그 이전
-      return DateFormat.Md().format(dateTime);
-    }
-  }
-
-  String toSimpleContent(int maxLines) {
-    if (split('\n').length > maxLines) {
-      var newContent = split('\n').sublist(0, maxLines).join('\n');
-      return "$newContent…";
-    } else {
-      return this;
-    }
   }
 }
