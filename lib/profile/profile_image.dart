@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class ProfileImage extends StatelessWidget {
   final String? uri;
+  final ImageProvider defaultImage;
   final double radius;
 
   const ProfileImage({
     super.key,
     this.uri,
     this.radius = 30,
+    required this.defaultImage,
   });
 
   @override
@@ -21,7 +23,7 @@ class ProfileImage extends StatelessWidget {
             )
           : CircleAvatar(
               radius: radius,
-              backgroundImage: const AssetImage("asset/images/default_profile_image.jpg"),
+              backgroundImage: defaultImage,
             ),
     );
   }
