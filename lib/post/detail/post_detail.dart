@@ -8,14 +8,16 @@ export 'post_detail_data.dart';
 
 class PostDetail extends StatefulWidget {
   final PostDetailData postDetailData;
-  final Map<String, Function> menuItems;
-  final Future<PostDetailData> Function() onRecommend;
+  final Map<String, Future<bool> Function()> menuItems;
+  final Future<bool> Function() onRecommend;
+  final Future<PostDetailData> Function() onRefresh;
 
   const PostDetail({
     super.key,
     required this.postDetailData,
     required this.menuItems,
     required this.onRecommend,
+    required this.onRefresh,
   });
 
   @override
@@ -36,8 +38,9 @@ class _PostDetailState extends State<PostDetail> {
     return Scaffold(
       appBar: AppBar(title: const Text("게시글 상세보기"), centerTitle: true, actions: [
         PopupMenuButton(
-          onSelected: (name) {
-            widget.menuItems[name]!();
+          onSelected: (name) async {
+            var refresh = await widget.menuItems[name]!();
+            if (refresh) onRefresh();
           },
           itemBuilder: (context) {
             return widget.menuItems.keys.map((e) => PopupMenuItem<String>(value: e, child: Text(e))).toList();
@@ -105,7 +108,8 @@ class _PostDetailState extends State<PostDetail> {
       children: [
         IconButton(
           onPressed: () async {
-            widget.onRecommend().then((newPostDetailData) => setState(() => _postDetailData = newPostDetailData));
+            var refresh = await widget.onRecommend();
+            if (refresh) onRefresh();
           },
           icon: child,
         ),
@@ -122,5 +126,9 @@ class _PostDetailState extends State<PostDetail> {
         Text("  ${_postDetailData.view}"),
       ],
     );
+  }
+
+  void onRefresh() {
+    widget.onRefresh().then((newPostDetailData) => setState(() => _postDetailData = newPostDetailData));
   }
 }
