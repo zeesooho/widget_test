@@ -40,7 +40,11 @@ class PostCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ProfileImage(radius: 25, uri: postCardData.user.image),
+                        ProfileImage(
+                          radius: 25,
+                          uri: postCardData.user.image,
+                          defaultImage: const AssetImage("asset/images/default_profile_image.jpg"),
+                        ),
                         nameWidget(),
                         dateWidget(),
                         viewWidget(filled: false),
