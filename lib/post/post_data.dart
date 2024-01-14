@@ -1,13 +1,11 @@
-import 'package:http/http.dart';
-
 abstract class PostData {
   final int id;
   final String title;
   final String content;
   final int view;
   final int recommend;
-  final String createdAt;
-  final String updatedAt;
+  final String createdDate;
+  final String updatedDate;
 
   PostData({
     required this.id,
@@ -15,8 +13,8 @@ abstract class PostData {
     required this.content,
     required this.view,
     required this.recommend,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdDate,
+    required this.updatedDate,
   });
 }
 
@@ -30,8 +28,8 @@ class PostCardData extends PostData {
     required super.content,
     required super.view,
     required super.recommend,
-    required super.createdAt,
-    required super.updatedAt,
+    required super.createdDate,
+    required super.updatedDate,
     required this.user,
     this.category,
   });
@@ -42,8 +40,8 @@ class PostCardData extends PostData {
         content: json['content'],
         view: json['view'],
         recommend: json['recommend'],
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt'],
+        createdDate: json['createdDate'],
+        updatedDate: json['updatedDate'],
         category: json['category'],
         user: PostUserData.fromJson(json['user']),
       );
@@ -54,19 +52,23 @@ class PostDetailData extends PostData {
   final int? studentId;
   final int? categoryId;
   final int reported;
+  final bool isMine;
+  final bool isRecommend;
 
   PostDetailData({
-    this.incumbentId,
-    this.studentId,
-    this.categoryId,
-    required this.reported,
     required super.id,
     required super.title,
     required super.content,
     required super.view,
     required super.recommend,
-    required super.createdAt,
-    required super.updatedAt,
+    required super.createdDate,
+    required super.updatedDate,
+    this.incumbentId,
+    this.studentId,
+    this.categoryId,
+    required this.reported,
+    required this.isMine,
+    required this.isRecommend,
   });
 
   factory PostDetailData.fromJson(Map<String, dynamic> json) => PostDetailData(
@@ -75,12 +77,14 @@ class PostDetailData extends PostData {
         content: json['content'],
         view: json['view'],
         recommend: json['recommend'],
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt'],
-        reported: json['reported'],
+        createdDate: json['createdDate'],
+        updatedDate: json['updatedDate'],
         incumbentId: json['incumbentId'],
         studentId: json['studentId'],
         categoryId: json['categoryId'],
+        reported: json['reported'],
+        isMine: json['isMine'],
+        isRecommend: json['isRecommend'],
       );
 }
 
