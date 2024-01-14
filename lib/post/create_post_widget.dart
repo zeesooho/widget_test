@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostWidget extends StatefulWidget {
+  final String? title;
+  final String? content;
+
   final CreatePostWidgetState createPostWidgetState = CreatePostWidgetState();
   final StreamController<bool> vaildStreamController = StreamController();
   final Future<bool> Function(String title, String content) onCreatePost;
@@ -12,6 +15,8 @@ class CreatePostWidget extends StatefulWidget {
   CreatePostWidget({
     super.key,
     required this.onCreatePost,
+    this.title,
+    this.content,
   }) {
     action = StreamBuilder<bool>(
         stream: vaildStreamController.stream,
@@ -20,16 +25,16 @@ class CreatePostWidget extends StatefulWidget {
             return CupertinoButton(
                 padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
                 onPressed: () => createPostWidgetState.onCreatePost(),
-                child: const Text(
-                  "작성 완료",
-                  style: TextStyle(color: CupertinoColors.activeBlue),
+                child: Text(
+                  title == null ? "작성 완료" : "수정 완료",
+                  style: const TextStyle(color: CupertinoColors.activeBlue),
                 ));
           }
-          return const CupertinoButton(
-              padding: EdgeInsets.only(top: 8, left: 8, bottom: 8),
+          return CupertinoButton(
+              padding: const EdgeInsets.only(top: 8, left: 8, bottom: 8),
               onPressed: null,
               child: Text(
-                "작성 완료",
+                title == null ? "작성 완료" : "수정 완료",
               ));
         });
   }
@@ -48,6 +53,8 @@ class CreatePostWidgetState extends State<CreatePostWidget> {
   @override
   void initState() {
     super.initState();
+    _titleController.text = widget.title ?? "";
+    _contentController.text = widget.content ?? "";
 
     _titleController.addListener(() {
       widget.vaildStreamController.add((titleValidate && contentValidate));
