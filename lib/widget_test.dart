@@ -1,7 +1,7 @@
 export 'package:widget_test/login/login_widget.dart';
 
 export 'package:widget_test/signup/signup_widget.dart';
-export 'package:widget_test/signup/singup_dat.dart';
+export 'package:widget_test/signup/singup_data.dart';
 
 export 'package:widget_test/profile/profile_card.dart';
 export 'package:widget_test/profile/profile_image.dart';

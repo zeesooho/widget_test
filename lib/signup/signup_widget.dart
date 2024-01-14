@@ -8,7 +8,7 @@ import 'package:widget_test/common/common_text_field.dart';
 import 'package:widget_test/common/helper_style.dart';
 import 'package:widget_test/common/input_validation.dart';
 import 'package:widget_test/login/id_pw_field.dart';
-import 'package:widget_test/signup/singup_dat.dart';
+import 'package:widget_test/signup/singup_data.dart';
 
 class SignUpWidget extends StatefulWidget {
   final SignUpWidgetState signUpWidgetState = SignUpWidgetState();
