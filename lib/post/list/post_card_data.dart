@@ -4,7 +4,6 @@ import 'post_user_data.dart';
 export 'post_user_data.dart';
 
 class PostCardData extends PostData {
-  final String? category;
   final PostUserData user;
 
   PostCardData({
@@ -16,7 +15,6 @@ class PostCardData extends PostData {
     required super.createdDate,
     required super.updatedDate,
     required this.user,
-    this.category,
   });
 
   factory PostCardData.fromJson(Map<String, dynamic> json) => PostCardData(
@@ -27,7 +25,6 @@ class PostCardData extends PostData {
         recommend: json['recommend'],
         createdDate: json['createdDate'],
         updatedDate: json['updatedDate'],
-        category: json['category'],
         user: PostUserData.fromJson(json['user']),
       );
 }

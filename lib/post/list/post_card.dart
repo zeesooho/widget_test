@@ -11,7 +11,7 @@ class PostCard extends StatelessWidget {
   final PostCardData postCardData;
   final int maxLines;
   final TextOverflow contentOverflow;
-  final Function(int id, String? category)? onTap;
+  final Function(int id)? onTap;
 
   PostCard({
     super.key,
@@ -31,7 +31,7 @@ class PostCard extends StatelessWidget {
             color: Colors.white,
             child: InkWell(
               onTap: () {
-                if (onTap != null) onTap!(postCardData.id, postCardData.category);
+                if (onTap != null) onTap!(postCardData.id);
               },
               child: Padding(
                 padding: const EdgeInsets.all(12),

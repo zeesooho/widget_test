@@ -4,7 +4,7 @@ import 'package:widget_test/post/list/post_card.dart';
 class PostList extends StatefulWidget {
   final List<PostCardData> postDatas;
   final ScrollController scrollController;
-  final Function(int id, String? category)? onTap;
+  final Function(int id)? onTap;
 
   const PostList({
     super.key,
@@ -34,8 +34,8 @@ class _PostListState extends State<PostList> {
       itemBuilder: (context, index) {
         return PostCard(
           postCardData: widget.postDatas[index],
-          onTap: (id, category) {
-            if (widget.onTap != null) widget.onTap!(id, category);
+          onTap: (id) {
+            if (widget.onTap != null) widget.onTap!(id);
           },
         );
       },
