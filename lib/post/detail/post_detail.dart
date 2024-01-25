@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:widget_test/post/detail/comment/comment_card.dart';
 
 import 'post_detail_data.dart';
 import 'post_string_format.dart';
@@ -63,9 +64,7 @@ class _PostDetailState extends State<PostDetail> {
                 ],
               ),
               const Divider(),
-              const Expanded(
-                child: Text("댓글 영역"),
-              )
+              CommentCard(comment: _postDetailData.comments[0]),
             ],
           ),
         ),
