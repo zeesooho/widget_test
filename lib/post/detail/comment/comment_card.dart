@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:widget_test/post/detail/comment/comment.dart';
+import 'package:widget_test/post/detail/comment/comment_list.dart';
+import 'package:widget_test/post/detail/post_string_format.dart';
 
 class CommentCard extends StatelessWidget {
   final Comment comment;
@@ -8,12 +10,17 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        Text(comment.content),
-        Text(comment.recommend.toString()),
-        Text(comment.createdDate.toString()),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(comment.content),
+            Text(comment.recommend.toString()),
+            Text(comment.createdDate.toSimpleTime()),
+          ],
+        ),
+        comment.children.isNotEmpty ? CommentList(comments: comment.children, isReply: true) : Container(),
       ],
     );
   }

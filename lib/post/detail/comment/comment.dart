@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 class Comment {
   final int id;
   final int recommend;
@@ -31,14 +33,19 @@ class Comment {
         updatedDate: json['updatedDate'],
       );
 
-  static List<Comment> listFromJson(List<dynamic> json) {
-    List<Comment> comments = json.map((comment) => Comment.fromJson(comment)).toList();
-    List<Comment> children = comments.where((comment) => comment.parentCommentId != null).toList();
+  static List<Comment> listFromJson(List<dynamic> jsonArray) {
+    Map<int, Comment> comments = {};
+    Queue<Comment> children = Queue();
 
-    for (var child in children) {
-      comments.firstWhere((Comment comment) => comment.id == child.id).children.add(child);
+    for (var json in jsonArray) {
+      var comment = Comment.fromJson(json);
+      comment.parentCommentId != null ? children.add(comment) : comments[comment.id] = comment;
     }
 
-    return comments;
+    while (children.isNotEmpty) {
+      var child = children.removeFirst();
+      comments[child.parentCommentId]?.children.add(child);
+    }
+    return comments.values.map((comment) => comment).toList();
   }
 }
