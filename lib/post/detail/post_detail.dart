@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:widget_test/post/detail/comment/comment_card.dart';
+import 'package:widget_test/post/detail/comment/comment_list.dart';
 
 import 'post_detail_data.dart';
 import 'post_string_format.dart';
@@ -52,19 +52,32 @@ class _PostDetailState extends State<PostDetail> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              titleWidget(),
-              const SizedBox(height: 8),
-              contentWidget(),
-              Row(
-                children: [
-                  viewArea(),
-                  recommendArea(filled: _postDetailData.isRecommend, color: CupertinoColors.activeBlue),
-                ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      titleWidget(),
+                      const SizedBox(height: 8),
+                      contentWidget(),
+                      Row(
+                        children: [
+                          viewArea(),
+                          recommendArea(filled: _postDetailData.isRecommend, color: CupertinoColors.activeBlue),
+                        ],
+                      ),
+                      const Divider(),
+                      CommentList(comments: _postDetailData.comments, isReply: false),
+                    ],
+                  ),
+                ),
               ),
-              const Divider(),
-              CommentCard(comment: _postDetailData.comments[0]),
+              const SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: Text('댓글 작성'),
+              ),
             ],
           ),
         ),
