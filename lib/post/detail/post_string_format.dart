@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 
 extension PostStringFormat on String {
-  //이메일 포맷 검증
   String toSimpleTime() {
     DateTime now = DateTime.now().toLocal();
     DateTime beforeHour = DateTime.now().toLocal().subtract(const Duration(hours: 1));
@@ -21,6 +20,10 @@ extension PostStringFormat on String {
       // 그 이전
       return DateFormat.Md().format(dateTime);
     }
+  }
+
+  String toFormattedTime() {
+    return DateFormat("MM/dd HH:mm").format(DateTime.parse(this).toLocal());
   }
 
   String toSimpleContent(int maxLines) {
