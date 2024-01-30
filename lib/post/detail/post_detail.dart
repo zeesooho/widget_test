@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:widget_test/post/detail/comment/comment_list.dart';
+import 'package:widget_test/profile/profile_image.dart';
 
 import 'post_detail_data.dart';
 import 'post_string_format.dart';
@@ -48,18 +49,19 @@ class _PostDetailState extends State<PostDetail> {
           },
         ),
       ]),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Center(
-          child: Column(
-            children: [
-              Expanded(
+      body: Center(
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      titleWidget(),
+                      profileWidget(),
                       const SizedBox(height: 8),
+                      Text(_postDetailData.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       contentWidget(),
                       Row(
                         children: [
@@ -73,13 +75,29 @@ class _PostDetailState extends State<PostDetail> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 60,
-                width: double.infinity,
-                child: Text('댓글 작성'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 80,
+                width: MediaQuery.of(context).size.width,
+                child: Card(
+                  color: Colors.grey.shade100,
+                  elevation: 0,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 20),
+                      const Expanded(child: TextField()),
+                      CupertinoButton(
+                        onPressed: () {},
+                        child: const Text("작성"),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -99,16 +117,26 @@ class _PostDetailState extends State<PostDetail> {
     );
   }
 
-  Widget titleWidget() {
+  Widget profileWidget() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          _postDetailData.title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        const ProfileImage(
+          defaultImage: AssetImage("asset/images/default_profile_image.jpg"),
+          radius: 20,
         ),
         const SizedBox(width: 8),
-        Center(child: Text(_postDetailData.createdDate.toSimpleTime())),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "이름 들어갈 자리",
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(width: 8),
+            Text(_postDetailData.createdDate.toFormattedTime()),
+          ],
+        ),
       ],
     );
   }
