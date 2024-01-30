@@ -70,7 +70,19 @@ class _PostDetailState extends State<PostDetail> {
                         ],
                       ),
                       const Divider(),
-                      CommentList(comments: _postDetailData.comments, isReply: false),
+                      CommentList(
+                        comments: _postDetailData.comments,
+                        isReply: false,
+                        onEdit: () async {
+                          return true;
+                        },
+                        onDelete: () async {
+                          return true;
+                        },
+                        onReport: () async {
+                          return true;
+                        },
+                      ),
                     ],
                   ),
                 ),

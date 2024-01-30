@@ -7,12 +7,14 @@ import 'package:widget_test/profile/profile_image.dart';
 
 class CommentCard extends StatelessWidget {
   final Comment comment;
+  final PopupMenuButton menus;
   final bool isReply;
 
   const CommentCard({
     super.key,
     required this.comment,
     required this.isReply,
+    required this.menus,
   });
 
   @override
@@ -44,17 +46,7 @@ class CommentCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        PopupMenuButton(
-                          onSelected: (name) async {},
-                          itemBuilder: (context) {
-                            var list = [
-                              const PopupMenuItem(value: 0, child: Text("수정")),
-                              const PopupMenuItem(value: 1, child: Text("삭제")),
-                              const PopupMenuItem(value: 2, child: Text("신고")),
-                            ];
-                            return list;
-                          },
-                        ),
+                        menus,
                       ],
                     ),
                   ],
@@ -70,7 +62,22 @@ class CommentCard extends StatelessWidget {
               ],
             ),
           ),
-          Visibility(visible: comment.children.isNotEmpty, child: CommentList(comments: comment.children, isReply: true)),
+          Visibility(
+            visible: comment.children.isNotEmpty,
+            child: CommentList(
+              comments: comment.children,
+              isReply: true,
+              onEdit: () async {
+                return true;
+              },
+              onDelete: () async {
+                return true;
+              },
+              onReport: () async {
+                return true;
+              },
+            ),
+          ),
         ],
       ),
     );

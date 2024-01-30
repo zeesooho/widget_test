@@ -6,6 +6,7 @@ class Comment {
   final int? parentCommentId;
   final int? incumbentId;
   final int? studentId;
+  final bool isMine;
   final String content;
   final String createdDate;
   final String updatedDate;
@@ -17,6 +18,7 @@ class Comment {
     this.parentCommentId,
     this.incumbentId,
     this.studentId,
+    required this.isMine,
     required this.content,
     required this.createdDate,
     required this.updatedDate,
@@ -28,6 +30,7 @@ class Comment {
         parentCommentId: json['parentCommentId'],
         incumbentId: json['incumbentId'],
         studentId: json['studentId'],
+        isMine: false,
         content: json['content'],
         createdDate: json['createdDate'],
         updatedDate: json['updatedDate'],
