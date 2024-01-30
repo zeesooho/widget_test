@@ -45,6 +45,7 @@ class PostCard extends StatelessWidget {
                           uri: postCardData.user.image,
                           defaultImage: const AssetImage("asset/images/default_profile_image.jpg"),
                         ),
+                        const SizedBox(width: 12),
                         nameWidget(),
                         dateWidget(),
                         viewWidget(filled: false),

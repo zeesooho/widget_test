@@ -23,8 +23,8 @@ class CommentList extends StatelessWidget {
           padding: isReply ? const EdgeInsets.only(left: 12) : EdgeInsets.zero,
           child: Column(
             children: [
-              CommentCard(comment: comments[index]),
-              isReply ? Container() : const Divider(),
+              CommentCard(comment: comments[index], isReply: isReply),
+              Visibility(visible: !isReply, child: const Divider()),
             ],
           ),
         );
