@@ -23,7 +23,20 @@ extension PostStringFormat on String {
   }
 
   String toFormattedTime() {
-    return DateFormat("MM/dd HH:mm").format(DateTime.parse(this).toLocal());
+    DateTime now = DateTime.now().toLocal();
+    DateTime beforeHour = DateTime.now().toLocal().subtract(const Duration(hours: 1));
+
+    DateTime dateTime = DateTime.parse(this).toLocal();
+
+    if (dateTime.isAfter(beforeHour)) {
+      // 1시간 이내
+      var gapMinute = (now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch) / 60000;
+      if (gapMinute < 2) return "방금전";
+      return "${gapMinute.toInt()}분 전";
+    } else {
+      // 그 이전
+      return DateFormat("MM/dd HH:mm").format(DateTime.parse(this).toLocal());
+    }
   }
 
   String toSimpleContent(int maxLines) {
