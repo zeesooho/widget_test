@@ -34,52 +34,71 @@ class CommentCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Row(
-                      children: [
-                        ProfileImage(
-                          defaultImage: AssetImage("asset/images/default_profile_image.jpg"),
-                          radius: 15,
-                        ),
-                        SizedBox(width: 4),
-                        Text("이름 들어갈 자리", style: TextStyle(fontSize: 15)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        menus,
-                      ],
-                    ),
+                    profileWidget(null, '이름 들어갈 자리'),
+                    menuWIdget(),
                   ],
                 ),
-                Text(comment.content),
-                Row(
-                  children: [
-                    Visibility(visible: comment.recommend != 0, child: const Icon(CupertinoIcons.heart)),
-                    Visibility(visible: comment.recommend != 0, child: Text("${comment.recommend}  ")),
-                    Text(comment.createdDate.toFormattedTime()),
-                  ],
-                ),
+                contentWidget(),
+                infoWidget(),
               ],
             ),
           ),
-          Visibility(
-            visible: comment.children.isNotEmpty,
-            child: CommentList(
-              comments: comment.children,
-              isReply: true,
-              onEdit: () async {
-                return true;
-              },
-              onDelete: () async {
-                return true;
-              },
-              onReport: () async {
-                return true;
-              },
-            ),
-          ),
+          replyWidget(),
         ],
       ),
+    );
+  }
+
+  Visibility replyWidget() {
+    return Visibility(
+      visible: comment.children.isNotEmpty,
+      child: CommentList(
+        comments: comment.children,
+        isReply: true,
+        onEdit: () async {
+          return true;
+        },
+        onDelete: () async {
+          return true;
+        },
+        onReport: () async {
+          return true;
+        },
+      ),
+    );
+  }
+
+  Widget menuWIdget() {
+    return Row(
+      children: [
+        menus,
+      ],
+    );
+  }
+
+  Widget profileWidget(String? image, String name) {
+    return Row(
+      children: [
+        ProfileImage(
+          uri: image,
+          defaultImage: const AssetImage("asset/images/default_profile_image.jpg"),
+          radius: 15,
+        ),
+        const SizedBox(width: 4),
+        Text(name, style: const TextStyle(fontSize: 15)),
+      ],
+    );
+  }
+
+  Widget contentWidget() => Text(comment.content, style: const TextStyle(height: 1.5));
+
+  Widget infoWidget() {
+    return Row(
+      children: [
+        Visibility(visible: comment.recommend != 0, child: const Icon(CupertinoIcons.heart)),
+        Visibility(visible: comment.recommend != 0, child: Text("${comment.recommend}  ")),
+        Text(comment.createdDate.toFormattedTime()),
+      ],
     );
   }
 }

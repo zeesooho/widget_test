@@ -59,7 +59,7 @@ class _PostDetailState extends State<PostDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      profileWidget(),
+                      profileWidget(null, _postDetailData.id.toString()),
                       const SizedBox(height: 8),
                       Text(_postDetailData.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       contentWidget(),
@@ -129,7 +129,7 @@ class _PostDetailState extends State<PostDetail> {
     );
   }
 
-  Widget profileWidget() {
+  Widget profileWidget(String? image, String name) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -141,9 +141,9 @@ class _PostDetailState extends State<PostDetail> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "이름 들어갈 자리",
-              style: TextStyle(fontSize: 16),
+            Text(
+              name,
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(width: 8),
             Text(_postDetailData.createdDate.toFormattedTime()),

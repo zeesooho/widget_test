@@ -224,13 +224,16 @@ class SignUpWidgetState extends State<SignUpWidget> {
   // 회원가입 버튼 눌렀을 시
   void signUp() async {
     // form 검증 로직
-    var response = await widget.onSignUp(SignUpData(
-      email: _idController.text,
-      password: _pwController.text,
-      name: _nameController.text,
-      age: age,
-      gender: gender,
-    ));
+    var response = await widget.onSignUp(
+      SignUpData(
+        email: _idController.text,
+        password: _pwController.text,
+        name: _nameController.text,
+        age: age,
+        gender: gender,
+        type: 'student',
+      ),
+    );
 
     if (response && context.mounted) {
       Navigator.of(context).pop();

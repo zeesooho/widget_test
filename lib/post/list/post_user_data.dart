@@ -16,7 +16,7 @@ class PostUserData {
   factory PostUserData.fromJson(Map<String, dynamic> json) => PostUserData(
         type: json['type'],
         id: json['id'],
-        name: json['name'],
+        name: json['username'],
         image: json['image'],
         additionalInfo: json['additionalInfo'],
       );

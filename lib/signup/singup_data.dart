@@ -4,6 +4,7 @@ class SignUpData {
   final String name;
   final int age;
   final bool gender;
+  final String type;
 
   SignUpData({
     required this.email,
@@ -11,5 +12,6 @@ class SignUpData {
     required this.name,
     required this.age,
     required this.gender,
+    required this.type,
   });
 }
