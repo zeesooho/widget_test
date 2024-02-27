@@ -1,3 +1,5 @@
+export 'package:widget_test/common/default_modal.dart';
+
 export 'package:widget_test/login/login_widget.dart';
 
 export 'package:widget_test/signup/signup_widget.dart';
