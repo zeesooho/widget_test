@@ -4,7 +4,7 @@ class SignUpData {
   final String name;
   final int age;
   final bool gender;
-  final String type;
+  final bool type;
 
   SignUpData({
     required this.email,

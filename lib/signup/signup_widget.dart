@@ -66,17 +66,21 @@ class SignUpWidgetState extends State<SignUpWidget> {
 
   final _pwCheckStreamController = StreamController<String>();
 
-  get isValid => (idValid && pwValid && pwCheckValid && nameValid && ageValid && genderValid);
+  get isValid => (idValid && pwValid && pwCheckValid && nameValid && ageValid && genderValid && typeValid);
   bool idValid = false;
   bool pwValid = false;
   bool pwCheckValid = false;
   bool nameValid = false;
   bool ageValid = false;
   bool genderValid = false;
-  List<bool> isSelected2 = [false, false];
+  bool typeValid = false;
+
+  List<bool> isSelectedGender = [false, false];
+  List<bool> isSelectedType = [false, false];
 
   int age = 0;
   bool gender = false;
+  bool type = false;
 
   @override
   void initState() {
@@ -185,15 +189,15 @@ class SignUpWidgetState extends State<SignUpWidget> {
                     child: LayoutBuilder(
                       builder: (context, constraint) => ToggleButtons(
                         constraints: BoxConstraints.expand(height: MediaQuery.of(context).size.height / 18, width: constraint.maxWidth / 2 - 4),
-                        isSelected: isSelected2,
+                        isSelected: isSelectedGender,
                         disabledColor: Colors.grey,
                         selectedColor: Colors.white,
                         fillColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
                         borderRadius: const BorderRadius.all(Radius.circular(4)),
                         onPressed: (index) {
                           setState(() {
-                            isSelected2[index] = true;
-                            isSelected2[1 - index] = false;
+                            isSelectedGender[index] = true;
+                            isSelectedGender[1 - index] = false;
                             genderValid = true;
                             gender = (1 - index) == 0 ? true : false;
                             validSink();
@@ -215,6 +219,35 @@ class SignUpWidgetState extends State<SignUpWidget> {
                 ],
               ),
             ),
+            LayoutBuilder(
+              builder: (context, constraint) => ToggleButtons(
+                constraints: BoxConstraints.expand(height: MediaQuery.of(context).size.height / 18, width: constraint.maxWidth / 2 - 2),
+                isSelected: isSelectedType,
+                disabledColor: Colors.grey,
+                selectedColor: Colors.white,
+                fillColor: const Color.fromARGB(0xFF, 0x9E, 0x78, 0x56),
+                borderRadius: const BorderRadius.all(Radius.circular(4)),
+                onPressed: (index) {
+                  setState(() {
+                    isSelectedType[index] = true;
+                    isSelectedType[1 - index] = false;
+                    typeValid = true;
+                    type = (1 - index) == 0 ? true : false;
+                    validSink();
+                  });
+                },
+                children: const [
+                  Text(
+                    "학생",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    "현직자",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -231,7 +264,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
         name: _nameController.text,
         age: age,
         gender: gender,
-        type: 'student',
+        type: type,
       ),
     );
 

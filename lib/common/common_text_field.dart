@@ -10,6 +10,7 @@ class CommonTextField extends StatefulWidget {
   final String? hintText;
   final String? helperText;
   final HelperStyle? helperStyle;
+  final Color? color;
   final bool isLast;
   final TextEditingController controller;
   final Function(String)? onChange;
@@ -23,6 +24,7 @@ class CommonTextField extends StatefulWidget {
     this.hintText,
     this.helperText,
     this.helperStyle,
+    this.color,
     this.isLast = false,
     this.onChange,
     this.padding,
@@ -102,8 +104,8 @@ InputDecoration commonDecoration(CommonTextField widget, Widget suffixIcon) {
     labelText: widget.labelText,
     helperText: widget.helperText,
     helperStyle: widget.helperStyle?.style,
-    enabledBorder: getInputBorder(defaultColor),
-    focusedBorder: getInputBorder(defaultColor, bold: true),
+    enabledBorder: getInputBorder(widget.color ?? defaultColor),
+    focusedBorder: getInputBorder(widget.color ?? defaultColor, bold: true),
     errorBorder: getInputBorder(CupertinoColors.systemRed),
     fillColor: CupertinoColors.white,
     filled: true,
