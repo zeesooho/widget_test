@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DefaultModal extends StatelessWidget {
   final String? title;
@@ -33,4 +33,12 @@ class DefaultModal extends StatelessWidget {
       ),
     );
   }
+}
+
+showModal(BuildContext context, {required Widget child, String? title}) {
+  showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return DefaultModal(title: title, child: child);
+      });
 }
