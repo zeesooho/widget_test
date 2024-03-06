@@ -1,11 +1,13 @@
 import 'dart:collection';
 
+import 'package:widget_test/post/list/post_user_data.dart';
+
 class Comment {
   final int id;
   final int recommend;
   final int? parentCommentId;
-  final int? incumbentId;
-  final int? studentId;
+  // final String type;
+  final PostUserData? userData;
   final bool isMine;
   final String content;
   final String createdDate;
@@ -16,8 +18,8 @@ class Comment {
     required this.id,
     required this.recommend,
     this.parentCommentId,
-    this.incumbentId,
-    this.studentId,
+    // required this.type,
+    this.userData,
     required this.isMine,
     required this.content,
     required this.createdDate,
@@ -28,9 +30,9 @@ class Comment {
         id: json['id'],
         recommend: json['recommend'],
         parentCommentId: json['parentCommentId'],
-        incumbentId: json['incumbentId'],
-        studentId: json['studentId'],
-        isMine: false,
+        // type: json['type'],
+        userData: json['user'] == null ? null : PostUserData.fromJson(json['user']),
+        isMine: json['isMine'],
         content: json['content'],
         createdDate: json['createdDate'],
         updatedDate: json['updatedDate'],

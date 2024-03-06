@@ -5,25 +5,24 @@ import 'package:widget_test/post/detail/comment/comment_card.dart';
 class CommentList extends StatelessWidget {
   final List<Comment> comments;
   final bool isReply;
-  final Future<bool> Function() onEdit;
-  final Future<bool> Function() onDelete;
-  final Future<bool> Function() onReport;
+  final Future<bool> Function(int commentId) onDelete;
+  final Future<bool> Function(int commentId) onReport;
+  final Future<bool> Function(int commentId) onReply;
 
   CommentList({
     super.key,
     required this.comments,
     required this.isReply,
-    required this.onEdit,
     required this.onDelete,
     required this.onReport,
+    required this.onReply,
   });
 
-  final _menuMine = [
-    const PopupMenuItem<String>(value: 'onEdit', child: Text('수정')),
+  final List<PopupMenuItem<String>> _menus = [
+    const PopupMenuItem<String>(value: 'onReply', child: Text('대댓글 달기')),
     const PopupMenuItem<String>(value: 'onDelete', child: Text('삭제')),
+    const PopupMenuItem<String>(value: 'onReport', child: Text('신고')),
   ];
-
-  final _menuOthers = [const PopupMenuItem<String>(value: 'onReport', child: Text('신고'))];
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +42,14 @@ class CommentList extends StatelessWidget {
                   onSelected: (name) async {
                     var response = false;
                     switch (name) {
-                      case 'onEdit':
-                        response = await onEdit();
+                      case 'onReply':
+                        response = await onReply(comments[index].id);
                         break;
                       case 'onDelete':
-                        response = await onDelete();
+                        response = await onDelete(comments[index].id);
                         break;
                       case 'onReport':
-                        response = await onReport();
+                        response = await onReport(comments[index].id);
                         break;
                     }
 
@@ -61,9 +60,19 @@ class CommentList extends StatelessWidget {
                     }
                   },
                   itemBuilder: (context) {
-                    return comments[index].isMine ? _menuMine : _menuOthers;
+                    var menus = <PopupMenuItem<String>>[];
+                    if (comments[index].parentCommentId == null) menus.add(_menus[0]);
+                    if (comments[index].isMine) {
+                      menus.add(_menus[1]);
+                    } else {
+                      menus.add(_menus[2]);
+                    }
+                    return menus;
                   },
                 ),
+                onReply: onReply,
+                onDelete: onDelete,
+                onReport: onReport,
               ),
               Visibility(visible: !isReply, child: const Divider()),
             ],

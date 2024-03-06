@@ -9,16 +9,38 @@ class CommentCard extends StatelessWidget {
   final Comment comment;
   final PopupMenuButton menus;
   final bool isReply;
+  final Future<bool> Function(int commentId) onReply;
+  final Future<bool> Function(int commentId) onDelete;
+  final Future<bool> Function(int commentId) onReport;
 
   const CommentCard({
     super.key,
     required this.comment,
     required this.isReply,
     required this.menus,
+    required this.onReply,
+    required this.onDelete,
+    required this.onReport,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (comment.userData == null) {
+      return Card(
+        shape: isReply ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)) : const BeveledRectangleBorder(),
+        color: isReply ? Colors.grey.shade100 : null,
+        elevation: 0,
+        child: Column(
+          children: [
+            Padding(
+              padding: isReply ? const EdgeInsets.only(left: 12, top: 12, bottom: 12) : const EdgeInsets.only(right: 4),
+              child: const Center(child: Text('삭제된 댓글입니다.')),
+            ),
+            replyWidget(),
+          ],
+        ),
+      );
+    }
     return Card(
       shape: isReply ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)) : const BeveledRectangleBorder(),
       color: isReply ? Colors.grey.shade100 : null,
@@ -34,7 +56,7 @@ class CommentCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    profileWidget(null, '이름 들어갈 자리'),
+                    profileWidget(comment.userData!.image, comment.userData!.name ?? ''),
                     menuWIdget(),
                   ],
                 ),
@@ -55,15 +77,9 @@ class CommentCard extends StatelessWidget {
       child: CommentList(
         comments: comment.children,
         isReply: true,
-        onEdit: () async {
-          return true;
-        },
-        onDelete: () async {
-          return true;
-        },
-        onReport: () async {
-          return true;
-        },
+        onReply: onReply,
+        onDelete: onDelete,
+        onReport: onReport,
       ),
     );
   }
