@@ -1,10 +1,11 @@
 import 'package:widget_test/post/post_data.dart';
+import 'package:widget_test/widget_test.dart';
 
 import 'comment/comment.dart';
 
 class PostDetailData extends PostData {
-  final int? incumbentId;
-  final int? studentId;
+  final PostUserData userData;
+  final String? type;
   final bool isMine;
   final bool isRecommend;
   final List<Comment> comments;
@@ -17,8 +18,8 @@ class PostDetailData extends PostData {
     required super.recommend,
     required super.createdDate,
     required super.updatedDate,
-    this.incumbentId,
-    this.studentId,
+    required this.userData,
+    required this.type,
     required this.isMine,
     required this.isRecommend,
     required this.comments,
@@ -32,8 +33,8 @@ class PostDetailData extends PostData {
         recommend: json['recommend'],
         createdDate: json['createdDate'],
         updatedDate: json['updatedDate'],
-        incumbentId: json['incumbentId'],
-        studentId: json['studentId'],
+        userData: PostUserData.fromJson(json['user']),
+        type: json['type'],
         isMine: json['isMine'],
         isRecommend: json['isRecommend'],
         comments: Comment.listFromJson(json['comments']),

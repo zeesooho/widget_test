@@ -104,7 +104,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           postCardData.user.type == 'incumbent' ? _incumbentTag : _studentTag,
-          Text(postCardData.user.name),
+          Text(postCardData.user.name ?? ''),
         ],
       ),
     );
