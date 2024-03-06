@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:widget_test/common/common_text_field.dart';
+import 'package:widget_test/common/default_modal.dart';
 import 'package:widget_test/post/detail/comment/comment_list.dart';
 import 'package:widget_test/profile/profile_image.dart';
 
+import 'post_commentdata.dart';
 import 'post_detail_data.dart';
 import 'post_string_format.dart';
 
@@ -13,6 +16,10 @@ class PostDetail extends StatefulWidget {
   final Map<String, Future<bool> Function()> menuItems;
   final Future<bool> Function() onRecommend;
   final Future<PostDetailData> Function() onRefresh;
+  final Future<bool> Function(PostCommentdata commentData) onPostComment;
+  final Future<bool> Function(int commentId) onEditComment;
+  final Future<bool> Function(int commentId) onDeleteComment;
+  final Future<bool> Function(int commentId) onReportComment;
 
   const PostDetail({
     super.key,
@@ -20,6 +27,10 @@ class PostDetail extends StatefulWidget {
     required this.menuItems,
     required this.onRecommend,
     required this.onRefresh,
+    required this.onPostComment,
+    required this.onEditComment,
+    required this.onDeleteComment,
+    required this.onReportComment,
   });
 
   @override
@@ -28,11 +39,22 @@ class PostDetail extends StatefulWidget {
 
 class _PostDetailState extends State<PostDetail> {
   late PostDetailData _postDetailData;
+  final TextEditingController _commentController = TextEditingController();
+  final FocusNode _textFieldFocus = FocusNode();
+  bool isReply = false;
+  int? parentCommentId;
 
   @override
   void initState() {
     super.initState();
     _postDetailData = widget.postDetailData;
+
+    _textFieldFocus.addListener(() {
+      if (!_textFieldFocus.hasFocus && _commentController.text.isEmpty) {
+        isReply = false;
+        parentCommentId = null;
+      }
+    });
   }
 
   @override
@@ -59,7 +81,8 @@ class _PostDetailState extends State<PostDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      profileWidget(null, _postDetailData.id.toString()),
+                      profileWidget(_postDetailData.userData.image,
+                          "${_postDetailData.userData.name ?? ''} ${_postDetailData.userData.type == 'incumbent' ? _postDetailData.userData.additionalInfo?.companyName : _postDetailData.userData.additionalInfo?.shcool}"),
                       const SizedBox(height: 8),
                       Text(_postDetailData.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       contentWidget(),
@@ -73,13 +96,44 @@ class _PostDetailState extends State<PostDetail> {
                       CommentList(
                         comments: _postDetailData.comments,
                         isReply: false,
-                        onEdit: () async {
+                        onReply: (commentId) async {
+                          FocusScope.of(context).requestFocus(_textFieldFocus);
+                          isReply = true;
+                          parentCommentId = commentId;
                           return true;
                         },
-                        onDelete: () async {
-                          return true;
+                        onDelete: (commentId) async {
+                          var response = await widget.onDeleteComment(commentId);
+                          if (response) onRefresh();
+                          return response;
                         },
-                        onReport: () async {
+                        onReport: (commentId) async {
+                          var textController = TextEditingController();
+                          showModal(
+                            context,
+                            title: '신고하기',
+                            child: Column(
+                              children: [
+                                CommonTextField(
+                                  color: CupertinoColors.activeBlue,
+                                  controller: textController,
+                                  hintText: '신고 사유',
+                                  onClear: () => {},
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: CupertinoButton(
+                                    color: CupertinoColors.activeBlue,
+                                    child: const Text('신고하기'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                           return true;
                         },
                       ),
@@ -99,9 +153,27 @@ class _PostDetailState extends State<PostDetail> {
                   child: Row(
                     children: [
                       const SizedBox(width: 20),
-                      const Expanded(child: TextField()),
+                      Expanded(
+                        child: TextField(
+                          controller: _commentController,
+                          focusNode: _textFieldFocus,
+                          decoration: InputDecoration(hintText: isReply ? '대댓글 작성' : '댓글 작성'),
+                        ),
+                      ),
                       CupertinoButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          var response = await widget.onPostComment(PostCommentdata(
+                            postId: _postDetailData.id,
+                            content: _commentController.text,
+                            parentCommendId: parentCommentId,
+                          ));
+                          if (response) {
+                            _commentController.clear();
+                            isReply = false;
+                            parentCommentId = null;
+                            onRefresh();
+                          }
+                        },
                         child: const Text("작성"),
                       ),
                     ],

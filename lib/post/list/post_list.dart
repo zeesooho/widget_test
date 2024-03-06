@@ -27,7 +27,6 @@ class _PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       controller: widget.scrollController,
       physics: const BouncingScrollPhysics(),
       itemCount: widget.postDatas.length,
